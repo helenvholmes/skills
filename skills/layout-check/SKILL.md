@@ -21,6 +21,8 @@ Test every page at:
 - **Both sides of every breakpoint you found:** 639 and 640, 1023 and 1024, and so on
 - **The middle of each range between breakpoints,** where a fluid layout is most stretched or squeezed
 
+Same-origin iframes of a fixed width are the most reliable way to sweep: create one per width, load the page in it, and measure inside it. Browser tools' viewport emulation can be dropped between calls without warning, so if you use it, check `innerWidth` before trusting a measurement. Use real window sizes (emulation or screenshots) for what iframes can't show, such as the browser's own scrollbars and short, landscape windows.
+
 At each width, measure with JavaScript rather than judging by eye:
 
 - `document.documentElement.scrollWidth > innerWidth` means something scrolls sideways. Find it: walk the elements and report any whose right edge passes the window's.

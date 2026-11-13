@@ -12,7 +12,7 @@ The scripts referred to below are in `scripts/`. Run the `.mjs` ones with Node. 
 ## 1. Map what to test
 
 - Every page, including the 404 page, and any page reachable only by URL.
-- Every theme × colour scheme. If the site picks a theme per visit or at random, find the mechanism (often `localStorage` or a `data-` attribute on `<html>`) so you can force each one.
+- Every theme × colour scheme. If the site picks a theme per visit or at random, find the mechanism (often `localStorage` or a `data-` attribute on `<html>`) so you can force each one. A site that moves to the next theme on every load needs the stored value set to the one *before* the theme you want.
 - Each state with different colours: default, hover, focus, active, visited, disabled, selected text.
 
 ## 2. Automated scan, every combination
@@ -22,6 +22,8 @@ Use `scripts/axe-sweep.js`. It loads each page in a hidden same-origin iframe, t
 If injecting axe fails, the site probably has a Content-Security-Policy, often as a `<meta>` tag. That's good for the site and bad for testing. Don't weaken the real policy: make a production build, copy it to a scratch folder, strip the CSP `<meta>` from the copy's HTML, serve that copy locally, and scan it. The copy is what ships, minus the policy.
 
 Read every violation; don't just count them. Note which ones axe got right but described vaguely, and which are false positives (rare, but say why).
+
+axe checks contrast only for what's on screen in its 1280×800 frame. Fixed, sticky and scroll-revealed elements (footers especially) may never be in view during the scan, so a pass there means nothing: check their colours directly in step 3.
 
 ## 3. Contrast for the palette, not just the page
 
@@ -71,6 +73,8 @@ Check by reading the rendered HTML and the accessibility tree:
 
 Turn on reduced-motion emulation and walk the site. Movement and scaling should stop; opacity fades can stay. Infinite animations should stop. Anything that follows the cursor or reacts to scroll should calm down or stop. `motion-review` covers motion in more depth.
 
+Some browser tools can emulate the colour scheme but not reduced motion. If yours can't, review the CSS (`prefers-reduced-motion` queries) and every script that animates, and say under "Not checked" that reduced motion was reviewed in code, not watched.
+
 ## 8. Fixing contrast: the closest passing colour
 
 When a colour fails, don't pick a replacement by eye. Use:
@@ -89,4 +93,4 @@ Use the shape in `../audit/SKILL.md` if you're running as part of an audit; othe
 
 ## Out-of-scope pages
 
-If the site links to sections it doesn't build (archived versions, other projects on subpaths or subdomains), scan their front pages with axe and report the results in a short separate table. Don't fix them unless asked; they often belong to other repos.
+If the site links to sections it doesn't build (archived versions, other projects on subpaths or subdomains), list them under "Not checked" as out of scope. If the user asks for them too, scan each front page with axe and report the results in a short separate table. Don't fix them unless asked; they often belong to other repos.

@@ -24,7 +24,7 @@ Spend a few minutes learning the site before testing it. You need to know:
 - **The stack** and how to run it: a dev server, and a production build you can serve locally.
 - **Every page.** Read the routes, not just the nav: orphaned pages still ship. Note redirects and rewrites too.
 - **Every theme.** Light and dark at minimum, and any others (some sites rotate colour themes per visit, or have a high-contrast mode). Find how the theme is chosen so you can force each one.
-- **What's out of scope but linked.** Archived versions, subdomains, sections served from other projects. Note them; they get a short separate section in the report, not a full audit, unless the user asks.
+- **What's out of scope but linked.** Archived versions, subdomains, sections served from other projects. List them under "Not checked". If the user asks for them too, give each front page a quick axe scan in a short separate table, not a full audit.
 - **What the author decided on purpose.** Read code comments, the README, CLAUDE.md or similar, and recent commit messages. Timings, easings, sizes and colours that come with a reason ("matches the design", "from the Figma file", "300ms so the change is seen") are decisions. Keep a list; you'll need it to avoid reporting them.
 
 ## 2. Run the checks
@@ -43,32 +43,31 @@ Collect findings as you go rather than writing five reports. For each one, keep:
 
 ## 3. Report
 
-One report, in this shape:
+The report is a page the user can read, filter and pick fixes from, built from data so every report has the same shape.
 
-```markdown
-[One or two sentences: the overall state, and the one or two things that matter most.]
+1. **Write the findings as JSON**, in the format in `references/report-format.md`. Save it somewhere disposable (a scratch or temp folder), never in the project.
+2. **Build the page:** `node scripts/build-report.mjs <report.json> <report.html>`. The script checks the data and says exactly what's wrong if something doesn't fit; fix the JSON and run it again.
+3. **Show it:**
+   - If you have a tool for publishing Artifacts, publish `report.html` as one (icon: `checklist`; description: one sentence naming the site and the counts). It's private to the user unless they share it. Don't run a design pass on it: the template is the design.
+   - Otherwise, build with `--standalone` and open the file in the user's browser.
+   - If neither is possible, give the report as Markdown in the same shape: a summary, then Serious, Moderate, Minor, Already good and Not checked.
+4. **In chat**, give the summary sentence, the link or file path, and the question. Don't paste the whole report again.
 
-## Serious
-Failures that block someone from using the site, or that fail WCAG AA, or real security holes.
+What goes in each section:
 
-## Moderate
-Real problems with a workaround, or that affect fewer people.
+- **Serious:** failures that block someone from using the site, that fail WCAG AA, or real security holes.
+- **Moderate:** real problems with a workaround, or that affect fewer people.
+- **Minor:** polish, and small wins.
+- **Already good:** what was checked and holds up. Keep it short, but include it: it tells the user what was covered.
+- **Not checked:** what needs a person or a device you don't have (a screen reader, a high-contrast mode, a real phone), what a tool couldn't do (reduced-motion emulation, say), and anything out of scope that you noticed.
 
-## Minor
-Polish, and small wins.
+Within each finding, lead with what's wrong in plain words, then the number that proves it, then the fix. Give file paths with line numbers. Use a table when several items share the same columns (contrast ratios per theme, sizes per page), and swatches for every contrast finding. Separate the objective failures from the design calls: a colour that fails 4.5:1 is objective, but *which* colour replaces it is the author's call, so mark it `yourCall` and say what you'd pick and why.
 
-## Already good
-What was checked and holds up. Keep it short, but include it: it tells the user what was covered.
-
-## Not checked
-What needs a human or a device you don't have (a screen reader, a high-contrast mode, a real phone), and anything out of scope that you noticed.
-```
-
-Within each finding, lead with what's wrong in plain words, then the number that proves it, then the fix. Link files as `path:line`. Use tables when several items share the same columns (contrast ratios per theme, sizes per page). Separate the objective failures from the design calls: a colour that fails 4.5:1 is objective, but *which* colour replaces it is the author's call, so say what you'd pick and why.
+Never put a secret's value in the report, even a dead one: name the file and commit instead.
 
 ## 4. Ask, then fix
 
-Don't fix anything until the user says which findings to act on. Then:
+Don't fix anything until the user says which findings to act on. The report page lets them tick findings and copy a request like "Fix findings 1, 3 and 7 from the example.com audit"; the numbers match the report. Then:
 
 - Fix in small, separate changes the user could revert one at a time. This author likes to try a change, look at it, and back it out if it's wrong.
 - For colour fixes, find the closest passing colour rather than inventing a new one (`accessibility-audit` has a script for this).
