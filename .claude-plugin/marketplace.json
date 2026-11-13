@@ -1,0 +1,15 @@
+{
+  "name": "helenvholmes",
+  "description": "Helen V. Holmes's pre-ship checks for websites: accessibility, motion, layout, performance and security.",
+  "owner": {
+    "name": "Helen V. Holmes",
+    "url": "https://helenvholmes.com"
+  },
+  "plugins": [
+    {
+      "name": "helenvholmes",
+      "source": "./",
+      "description": "Pre-ship checks for websites: accessibility, motion, layout, performance and security, run together by one audit skill."
+    }
+  ]
+}
