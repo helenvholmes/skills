@@ -11,6 +11,8 @@ Pre-ship checks for websites, as [Claude Code](https://claude.com/claude-code) s
 | `performance-audit` | Prunes unused pages, fonts, assets and packages, then measures what each page downloads and what loads where it shouldn't |
 | `security-audit` | Production dependency advisories, lockfile drift, unused risky features, headers and CSP, secrets, private pages |
 
+The report opens as a page: findings grouped by severity, real colour swatches for every contrast problem, filters by check, and a box on each finding to tick what you want fixed and copy the request back to Claude. In Claude it's published as a private Artifact; elsewhere it opens in your browser. The skill writes the findings as data (`skills/audit/references/report-format.md`) and `skills/audit/scripts/build-report.mjs` builds the page, so every report has the same shape.
+
 ## The opinions
 
 These skills come from auditing real projects, and they encode how I want my work reviewed. The main one: **a decision made on purpose is not a finding.** If a timing, colour or size was chosen deliberately, the skills don't suggest changing it to taste. They still report it when it fails someone (a colour below 4.5:1, an animation that flickers), and offer the smallest fix that keeps the intent.

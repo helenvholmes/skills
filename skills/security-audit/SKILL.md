@@ -9,6 +9,7 @@ Read `../audit/references/principles.md` first if it's there. Report only what y
 
 ## 1. Dependencies
 
+- **Is there a lockfile at all?** Check it's committed, not just present: look in `.gitignore` too. Without one, every install resolves the version ranges fresh, so a deploy can ship dependency versions nobody tested, and the audit can't say what production runs. That's a finding on its own: commit the lockfile and install with `npm ci` (or the equivalent). To audit anyway, generate a lockfile in a scratch copy (`npm install --package-lock-only`) and say the result is an approximation.
 - **What's actually installed.** Compare `package.json` with the lockfile. Automated bumps sometimes change one without the other, so the installed version can be older than it looks. Then check how the host installs (`npm ci` follows the lockfile; `npm install` follows `package.json`) to know which one production uses.
 - **Advisories that reach visitors.** Run the package manager's audit (`npm audit --omit=dev`, or the equivalent), and separate production dependencies from build and development tools. A critical advisory in a test runner isn't the same as one in the framework that serves pages.
 - **Advisories against features in use.** For each advisory in the framework, check whether the site uses the affected feature (rewrites, image optimisation, server actions, middleware). Those come first.
@@ -22,9 +23,9 @@ Frameworks often enable things by default that carry their own risks: an image o
 
 Check what the live site actually sends (`curl -sI`), not just what config files say, and check `<meta http-equiv>` tags in the HTML too.
 
-- **Content-Security-Policy:** a policy that allows only the site's own scripts, with hashes for any inline scripts, blocks most injected code. Static site frameworks can often generate one with the hashes at build time.
+- **Content-Security-Policy:** a policy that allows only the site's own scripts, with hashes for any inline scripts, blocks most injected code. Static site frameworks can often generate one with the hashes at build time. A policy in a `<meta>` tag only covers what comes after it, so it should be the first thing in `<head>`, before any inline script.
 - **`frame-ancestors 'none'`** (in the CSP header, since it doesn't work in a `<meta>` tag), to stop other sites embedding the page.
-- **`X-Content-Type-Options: nosniff`**, **`Referrer-Policy`**, and **HSTS** (many hosts add HSTS themselves).
+- **`X-Content-Type-Options: nosniff`**, **`Referrer-Policy`**, and **HSTS**. Many hosts add HSTS themselves, so confirm it in the live response rather than assuming either way.
 
 When proposing a CSP, check every page still works with it: inline scripts and styles, third-party embeds and analytics are what usually break.
 

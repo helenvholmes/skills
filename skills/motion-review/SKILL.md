@@ -34,7 +34,11 @@ For each, note what triggers it, what it changes, how long it runs, and what the
 - Fades can stay: reduced motion means gentler, not none, and a short fade still helps people follow what changed. Removing *all* animation is acceptable but not required; removing fades that carry meaning (something appearing) is a slight loss.
 - Infinite and looping animations stop.
 - Cursor-following and scroll-linked effects stop or become static.
-- JavaScript animations check the setting too. CSS media queries don't reach them.
+- JavaScript animations check the setting too. CSS media queries don't reach them. They should also listen for it changing (`matchMedia(...).addEventListener("change", ...)`): a script that reads it once at load ignores someone who turns reduced motion on mid-visit.
+
+If your browser tool can't emulate reduced motion, review it in the CSS and scripts instead, and say under "Not checked" that it wasn't watched.
+
+**Motion that never stops.** Anything that moves on its own for more than five seconds alongside other content (a looping animation, a marquee, a carousel) needs a way to pause or stop it, or should stop by itself (WCAG 2.2.2). That holds even when the motion is a deliberate design choice: report it as one, with the smallest fix that keeps it, such as stopping after a few cycles.
 
 **Off-screen and idle work.** Animations and listeners for things nobody can see should sleep: a `requestAnimationFrame` loop should stop when nothing is moving, and effects for elements off screen (including the contents of fixed footers that are hidden until scrolled to) should pause, for example behind an `IntersectionObserver`. Test it: put the pointer where the hidden element sits and count the updates.
 

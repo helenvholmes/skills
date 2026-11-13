@@ -1,0 +1,369 @@
+<title>{{TITLE}}</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  /* An inspection sheet: one reading column, findings grouped by severity,
+     each marked with a stripe in its severity colour. Every colour pair here
+     meets WCAG AA in both themes: an audit report should pass its own audit. */
+  :root {
+    --bg: #f6f7f8;
+    --surface: #ffffff;
+    --fg: #1b1f23;
+    --muted: #59626b;
+    --line: #d9dee3;
+    --accent: #1d5c86;
+    --serious: #b02a1f;
+    --serious-bg: #fcebe9;
+    --moderate: #8a5200;
+    --moderate-bg: #fdf1dc;
+    --minor: #4a5562;
+    --minor-bg: #edf0f3;
+    --good: #1c6a3a;
+    --good-bg: #e5f3e9;
+    --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121518; --surface: #191d21; --fg: #e5e8eb; --muted: #9ba5af; --line: #2d343b;
+      --accent: #84bde4; --serious: #ff948a; --serious-bg: #3a1815; --moderate: #f1b860;
+      --moderate-bg: #32250f; --minor: #b6bfc9; --minor-bg: #242a30; --good: #86d6a1;
+      --good-bg: #15301f; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121518; --surface: #191d21; --fg: #e5e8eb; --muted: #9ba5af; --line: #2d343b;
+    --accent: #84bde4; --serious: #ff948a; --serious-bg: #3a1815; --moderate: #f1b860;
+    --moderate-bg: #32250f; --minor: #b6bfc9; --minor-bg: #242a30; --good: #86d6a1;
+    --good-bg: #15301f; color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font: 15px/1.6 var(--font-body);
+    padding-block: 40px 120px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .page { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+  h1, h2, h3 { margin: 0; line-height: 1.25; text-wrap: balance; }
+  h1 { font-size: 30px; font-weight: 600; letter-spacing: -0.01em; }
+  h2 { font-size: 19px; font-weight: 600; }
+  h3 { font-size: 16px; font-weight: 600; }
+  p { margin: 0; }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  code, .mono { font-family: var(--font-mono); font-size: 0.88em; }
+  code { background: var(--minor-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .muted { color: var(--muted); }
+
+  /* Header */
+  header { display: flex; flex-direction: column; gap: 10px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; color: var(--muted); font-size: 13px; }
+  .summary { font-size: 17px; line-height: 1.55; max-width: 65ch; }
+  .scope { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; font-size: 13px; margin: 0; }
+  .scope dt { color: var(--muted); }
+  .scope dd { margin: 0; min-width: 0; }
+
+  /* Check strip */
+  .checks { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .check { background: var(--surface); padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .check-name { font-weight: 600; font-size: 14px; }
+  .check-status { font-size: 13px; display: flex; flex-wrap: wrap; gap: 4px 8px; }
+  .count { font-variant-numeric: tabular-nums; font-weight: 500; }
+  .count.serious { color: var(--serious); }
+  .count.moderate { color: var(--moderate); }
+  .count.minor { color: var(--minor); }
+  .count.clear { color: var(--good); }
+  .check-note { font-size: 12px; color: var(--muted); }
+  .filter-label { font-size: 13px; color: var(--muted); }
+
+  /* Filters */
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .filters button {
+    font: inherit; font-size: 13px; color: var(--fg); background: var(--surface);
+    border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; cursor: pointer;
+  }
+  .filters button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+
+  /* Findings */
+  .group { display: flex; flex-direction: column; gap: 12px; }
+  .group-head { display: flex; align-items: baseline; gap: 10px; }
+  .group-head .count { font-size: 14px; }
+  .finding {
+    background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--stripe);
+    border-radius: 8px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0;
+  }
+  .finding.serious { --stripe: var(--serious); }
+  .finding.moderate { --stripe: var(--moderate); }
+  .finding.minor { --stripe: var(--minor); }
+  .finding-head { display: flex; gap: 12px; align-items: flex-start; }
+  .num { font-family: var(--font-mono); font-size: 13px; color: var(--muted); padding-top: 2px; font-variant-numeric: tabular-nums; min-width: 2ch; }
+  .finding-title { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--minor-bg); color: var(--minor); }
+  .tag.yours { background: var(--moderate-bg); color: var(--moderate); }
+  .pick { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); white-space: nowrap; cursor: pointer; }
+  .pick input { width: 16px; height: 16px; accent-color: var(--accent); margin: 0; }
+  .finding-body { display: flex; flex-direction: column; gap: 8px; padding-left: calc(2ch + 12px); min-width: 0; }
+  .finding-body ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+  .label { font-weight: 600; }
+  .where { display: flex; flex-wrap: wrap; gap: 4px 12px; font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); overflow-wrap: anywhere; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 600; color: var(--muted); background: var(--bg); white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
+
+  /* Contrast swatches: the real colours, measured */
+  .swatches { display: flex; flex-direction: column; gap: 12px; }
+  .swatch-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 13px; }
+  .swatch-label { flex-basis: 100%; color: var(--muted); }
+  .swatch { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px 4px 4px; background: var(--surface); }
+  .sample { width: 44px; height: 30px; border-radius: 4px; display: grid; place-items: center; font-weight: 600; font-size: 14px; box-shadow: inset 0 0 0 1px rgb(127 127 127 / 0.25); }
+  .ratio { font-variant-numeric: tabular-nums; font-weight: 500; }
+  .ratio.fail { color: var(--serious); }
+  .ratio.pass { color: var(--good); }
+  .arrow { color: var(--muted); }
+
+  /* Already good / Not checked */
+  .plain-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .plain-list li { display: flex; gap: 10px; align-items: baseline; min-width: 0; }
+  .plain-list li > span:last-child { min-width: 0; }
+  .mark { flex: none; width: 18px; text-align: center; font-weight: 600; }
+  .good .mark { color: var(--good); }
+  .unchecked .mark { color: var(--muted); }
+
+  /* Picking what to fix */
+  .ask { font-size: 15px; }
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+    background: var(--surface); border-top: 1px solid var(--line);
+    padding-block: 12px calc(12px + env(safe-area-inset-bottom, 0px));
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .bar-inner { max-width: 760px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+  .bar-text { flex: 1; min-width: 0; font-size: 14px; }
+  .bar button {
+    font: inherit; font-size: 14px; font-weight: 500; border-radius: 6px; padding: 7px 14px; cursor: pointer;
+    background: var(--fg); color: var(--bg); border: 1px solid var(--fg);
+  }
+  .bar button:disabled { opacity: 0.45; cursor: default; }
+  .bar button.secondary { background: transparent; color: var(--fg); border-color: var(--line); }
+  .request { width: 100%; font-family: var(--font-mono); font-size: 13px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); }
+  @media (prefers-reduced-motion: no-preference) {
+    .finding { transition: opacity 150ms ease; }
+  }
+</style>
+
+<!-- The report's content. build-report.mjs replaces this block with the
+     audit's JSON; the format is in references/report-format.md. -->
+<script type="application/json" id="audit-data">{{DATA}}</script>
+
+<div class="page" id="app"></div>
+
+<div class="bar" role="region" aria-label="Choose what to fix">
+  <div class="bar-inner">
+    <p class="bar-text" id="bar-text" aria-live="polite">Tick the findings you want fixed.</p>
+    <button type="button" class="secondary" id="clear" disabled>Clear</button>
+    <button type="button" id="copy" disabled>Copy request</button>
+    <input class="request" id="request" type="text" readonly hidden aria-label="Request to paste back to Claude">
+  </div>
+</div>
+
+<script>
+(() => {
+  const data = JSON.parse(document.getElementById("audit-data").textContent);
+  const SEVERITIES = [
+    ["serious", "Serious"],
+    ["moderate", "Moderate"],
+    ["minor", "Minor"],
+  ];
+  const AREAS = ["Layout", "Accessibility", "Motion", "Performance", "Security"];
+
+  const esc = (s) =>
+    String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  // Inline formatting only: `code`, **bold**, and [links](https://...).
+  const fmt = (s) =>
+    esc(s)
+      .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2">$1</a>');
+  const paras = (v) => (Array.isArray(v) ? v : v ? [v] : []).map((p) => `<p>${fmt(p)}</p>`).join("");
+
+  // WCAG contrast, so a swatch can show a ratio the data didn't include.
+  const lum = (hex) => {
+    const h = hex.replace("#", "");
+    const full = h.length === 3 ? [...h].map((c) => c + c).join("") : h;
+    return [0, 2, 4]
+      .map((i) => parseInt(full.slice(i, i + 2), 16) / 255)
+      .map((v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4))
+      .reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
+  };
+  const ratioOf = (a, b) => {
+    const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  };
+  const swatch = (fg, bg, needs) => {
+    const r = ratioOf(fg, bg);
+    return `<span class="swatch"><span class="sample" data-fg="${esc(fg)}" data-bg="${esc(bg)}" aria-hidden="true">Aa</span>
+      <span><span class="mono">${esc(fg)}</span> on <span class="mono">${esc(bg)}</span>
+      · <span class="ratio ${r >= needs ? "pass" : "fail"}">${r.toFixed(2)}:1</span></span></span>`;
+  };
+
+  const findings = (data.findings || []).map((f, i) => ({ ...f, n: i + 1 }));
+  const byArea = (area) => findings.filter((f) => f.area === area);
+
+  const findingHTML = (f) => {
+    const parts = [];
+    if (f.body) parts.push(paras(f.body));
+    if (f.list) parts.push(`<ul>${f.list.map((li) => `<li>${fmt(li)}</li>`).join("")}</ul>`);
+    if (f.swatches) {
+      parts.push(
+        `<div class="swatches">${f.swatches
+          .map((s) => {
+            const needs = s.needs || 4.5;
+            return `<div class="swatch-row">${s.label ? `<span class="swatch-label">${fmt(s.label)}</span>` : ""}
+              ${swatch(s.fg, s.bg, needs)}
+              ${s.suggest ? `<span class="arrow" aria-hidden="true">→</span><span class="muted">nearest pass</span>${swatch(s.suggest, s.suggestOn || s.bg, needs)}` : ""}</div>`;
+          })
+          .join("")}</div>`,
+      );
+    }
+    if (f.table) {
+      parts.push(
+        `<div class="table-wrap"><table><thead><tr>${f.table.columns.map((c) => `<th scope="col">${fmt(c)}</th>`).join("")}</tr></thead>
+        <tbody>${f.table.rows.map((r) => `<tr>${r.map((c) => `<td>${fmt(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`,
+      );
+    }
+    if (f.evidence) parts.push(`<p><span class="label">Evidence:</span> ${fmt(f.evidence)}</p>`);
+    if (f.fix) parts.push(`<p><span class="label">Fix:</span> ${fmt(f.fix)}</p>`);
+    if (f.where?.length) parts.push(`<div class="where">${f.where.map((w) => `<span>${esc(w)}</span>`).join("")}</div>`);
+    const id = `pick-${f.n}`;
+    return `<article class="finding ${esc(f.severity)}" data-area="${esc(f.area)}" id="finding-${f.n}" aria-labelledby="title-${f.n}">
+      <div class="finding-head">
+        <span class="num">${f.n}</span>
+        <div class="finding-title">
+          <h3 id="title-${f.n}">${fmt(f.title)}</h3>
+          <div class="tags"><span class="tag">${esc(f.area)}</span>${f.yourCall ? '<span class="tag yours">Your call</span>' : ""}${f.wcag ? `<span class="tag">WCAG ${esc(f.wcag)}</span>` : ""}</div>
+        </div>
+        <label class="pick" for="${id}"><input type="checkbox" id="${id}" data-n="${f.n}"> Fix this</label>
+      </div>
+      <div class="finding-body">${parts.join("")}</div>
+    </article>`;
+  };
+
+  const checkHTML = (area) => {
+    const fs = byArea(area);
+    const note = (data.checks || {})[area];
+    if (note && note.skipped) {
+      return `<div class="check"><span class="check-name">${area}</span><span class="check-status muted">Skipped: ${esc(note.skipped)}</span></div>`;
+    }
+    const counts = SEVERITIES.map(([k, label]) => [k, label, fs.filter((f) => f.severity === k).length]).filter(([, , c]) => c);
+    const status = counts.length
+      ? counts.map(([k, label, c]) => `<span class="count ${k}">${c} ${label.toLowerCase()}</span>`).join("")
+      : '<span class="count clear">No issues</span>';
+    return `<div class="check"><span class="check-name">${area}</span><span class="check-status">${status}</span>${note?.note ? `<span class="check-note">${esc(note.note)}</span>` : ""}</div>`;
+  };
+
+  const scope = data.scope || {};
+  const scopeRows = Object.entries(scope).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${fmt(Array.isArray(v) ? v.join(", ") : v)}</dd>`).join("");
+
+  document.getElementById("app").innerHTML = `
+    <header>
+      <span class="eyebrow">Pre-ship audit</span>
+      <h1>${esc(data.site)}</h1>
+      <div class="meta">${[data.date, data.source].filter(Boolean).map((m) => `<span>${fmt(m)}</span>`).join("")}</div>
+    </header>
+    <p class="summary">${fmt(data.summary)}</p>
+    ${scopeRows ? `<dl class="scope">${scopeRows}</dl>` : ""}
+    <section aria-label="Results by check"><div class="checks">${AREAS.map(checkHTML).join("")}</div></section>
+    <div class="filters" role="group" aria-label="Show findings for">
+      <span class="filter-label">Show</span>
+      ${["All", ...AREAS.filter((a) => byArea(a).length)].map((a) => `<button type="button" data-area="${a}" aria-pressed="${a === "All"}">${a}</button>`).join("")}
+    </div>
+    ${SEVERITIES.map(([k, label]) => {
+      const fs = findings.filter((f) => f.severity === k);
+      if (!fs.length) return "";
+      return `<section class="group" aria-labelledby="group-${k}">
+        <div class="group-head"><h2 id="group-${k}">${label}</h2><span class="count ${k}">${fs.length}</span></div>
+        ${fs.map(findingHTML).join("")}
+      </section>`;
+    }).join("")}
+    ${data.good?.length ? `<section class="group good" aria-labelledby="group-good"><h2 id="group-good">Already good</h2>
+      <ul class="plain-list">${data.good.map((g) => `<li><span class="mark" aria-hidden="true">✓</span><span>${fmt(g)}</span></li>`).join("")}</ul></section>` : ""}
+    ${data.notChecked?.length ? `<section class="group unchecked" aria-labelledby="group-unchecked"><h2 id="group-unchecked">Not checked</h2>
+      <ul class="plain-list">${data.notChecked.map((g) => `<li><span class="mark" aria-hidden="true">–</span><span>${fmt(g)}</span></li>`).join("")}</ul></section>` : ""}
+    ${data.ask ? `<p class="ask">${fmt(data.ask)}</p>` : ""}
+  `;
+
+  // Swatch colours, set through the style object rather than style
+  // attributes, so a strict Content-Security-Policy doesn't strip them.
+  const HEX = /^#(?:[0-9a-f]{3}){1,2}$/i;
+  document.querySelectorAll(".sample").forEach((el) => {
+    if (HEX.test(el.dataset.bg)) el.style.background = el.dataset.bg;
+    if (HEX.test(el.dataset.fg)) el.style.color = el.dataset.fg;
+  });
+
+  // Filter by check.
+  const buttons = [...document.querySelectorAll(".filters button")];
+  buttons.forEach((b) =>
+    b.addEventListener("click", () => {
+      const area = b.dataset.area;
+      buttons.forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      document.querySelectorAll(".finding").forEach((el) => (el.hidden = area !== "All" && el.dataset.area !== area));
+      document.querySelectorAll(".group").forEach((g) => {
+        const items = g.querySelectorAll(".finding");
+        if (items.length) g.hidden = [...items].every((el) => el.hidden);
+      });
+    }),
+  );
+
+  // Picking what to fix. Ticks are remembered in this browser only.
+  const KEY = `audit-picks:${data.site}:${data.date}`;
+  const boxes = [...document.querySelectorAll(".pick input")];
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY) || "[]");
+    boxes.forEach((b) => (b.checked = saved.includes(Number(b.dataset.n))));
+  } catch {}
+  const barText = document.getElementById("bar-text");
+  const copy = document.getElementById("copy");
+  const clear = document.getElementById("clear");
+  const field = document.getElementById("request");
+  const picked = () => boxes.filter((b) => b.checked).map((b) => Number(b.dataset.n));
+  const listText = (ns) => (ns.length < 2 ? String(ns[0]) : `${ns.slice(0, -1).join(", ")} and ${ns.at(-1)}`);
+  const request = () => {
+    const ns = picked();
+    return `Fix ${ns.length === 1 ? "finding" : "findings"} ${listText(ns)} from the ${data.site} audit (${data.date}).`;
+  };
+  const update = () => {
+    const ns = picked();
+    barText.textContent = ns.length ? `${ns.length} picked: ${listText(ns)}.` : "Tick the findings you want fixed.";
+    copy.disabled = clear.disabled = !ns.length;
+    copy.textContent = "Copy request";
+    field.hidden = true;
+    try { localStorage.setItem(KEY, JSON.stringify(ns)); } catch {}
+  };
+  boxes.forEach((b) => b.addEventListener("change", update));
+  clear.addEventListener("click", () => { boxes.forEach((b) => (b.checked = false)); update(); });
+  copy.addEventListener("click", () => {
+    const text = request();
+    const fallback = () => {
+      field.value = text;
+      field.hidden = false;
+      field.select();
+      copy.textContent = "Select and copy";
+    };
+    try {
+      navigator.clipboard.writeText(text).then(() => (copy.textContent = "Copied"), fallback);
+    } catch { fallback(); }
+  });
+  update();
+})();
+</script>
