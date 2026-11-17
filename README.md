@@ -41,18 +41,7 @@ Then ask for an audit in plain words ("audit this site before I ship it"), or ca
 
 ### Starting a new site
 
-To start a portfolio from nothing, paste this into Claude Code in an empty folder:
-
-```
-Install the helenvholmes skills, then run /helenvholmes:portfolio-starter.
-I'm new to GitHub, so explain each new term the first time it comes up,
-and never ask me to paste a password or token into this chat.
-
-  /plugin marketplace add helenvholmes/skills
-  /plugin install helenvholmes@helenvholmes
-```
-
-It checks your setup first and runs `accounts-setup` if anything is missing.
+New to all this? [`skills/portfolio-starter/README.md`](skills/portfolio-starter/README.md) walks through it from the beginning: what you need first (including a paid Claude plan), installing the Claude desktop app, and the one prompt to paste.
 
 Or copy any folder from `skills/` into `~/.claude/skills/` to use it on its own, without the `helenvholmes:` prefix. Each check skill reads `../audit/references/principles.md` if it's there, so copy `audit` along with it to keep the opinions.
 
@@ -61,7 +50,7 @@ Or copy any folder from `skills/` into `~/.claude/skills/` to use it on its own,
 - A browser Claude can drive (the Claude desktop app's built-in browser, Claude in Chrome, or Playwright) for the layout, accessibility and motion checks.
 - Node.js, for the colour scripts in `skills/accessibility-audit/scripts/`.
 - The site running locally: a dev server, and ideally a production build.
-- For `portfolio-starter` and `accounts-setup`: a GitHub account and a Vercel account (both free; the skills help you make them), and permission to install software on your computer.
+- For `portfolio-starter` and `accounts-setup`: a paid Claude plan (Claude Code isn't on the free plan), a local session (not a cloud one), and permission to install software. The skills help make the free GitHub and Vercel accounts.
 
 ## Scripts
 

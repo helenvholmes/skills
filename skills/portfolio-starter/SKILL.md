@@ -18,6 +18,8 @@ Read `../audit/references/principles.md` first if it's there. It shapes every st
 
 ## 0. Accounts
 
+If this is a cloud session (claude.ai/code, or **Cloud** chosen in the desktop app), stop and send them to a **Local** session in an empty folder: the site has to be built on their computer, and plugins don't load in the cloud. `../accounts-setup/SKILL.md` step 0 says how to tell.
+
 Run `../accounts-setup/scripts/check.sh`. If git, the GitHub CLI or Node is missing, or they aren't signed in to GitHub, run the `accounts-setup` skill first and come back. The Vercel connector is strongly recommended (it lets you read build logs when something fails), but not required: step 6 works through Vercel's website too.
 
 ## 1. Interview
@@ -68,7 +70,7 @@ Doing this before building means every change gets its own preview link from the
 2. Scaffold the project with the framework's official starter, minimal template. Add a `.gitignore` covering `node_modules`, build output, `.env*` and OS files, and an `.nvmrc` with the Node major version.
 3. Replace the starter's home page with a one-line placeholder ("Site coming soon") so nothing half-built goes out.
 4. Commit, then create and push the repo: `gh repo create <name> --public|--private --source=. --push`. Explain commit and push as you go.
-5. Connect it to Vercel so pushes deploy by themselves. Walk them through it on Vercel's website, click by click: Add New → Project → Import the repo (the first time, Vercel asks to install its GitHub app; choosing only this repo is fine) → check the framework preset was detected → Deploy. Tell them the `*.vercel.app` address it gives is public but nobody knows it yet.
+5. Connect it to Vercel so pushes deploy by themselves. Walk them through it on Vercel's website, click by click (or, if the Vercel tools can create and link a project, offer to do it for them): Add New → Project → Import the repo (the first time, Vercel asks to install its GitHub app; choosing only this repo is fine) → check the framework preset was detected → Deploy. Tell them the `*.vercel.app` address it gives is public but nobody knows it yet.
 6. If the Vercel connector is set up, confirm the project and its first deployment through it. If the build fails, read the logs through it and fix it.
 
 From here on, work on branches. Explain once: `main` is the live site; each branch is a draft with its own preview link, and merging the pull request publishes it.

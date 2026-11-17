@@ -23,6 +23,14 @@ Read `../audit/references/principles.md` first if it's there. The parts that mat
 - When a token truly can't be avoided, the person creates it and enters it in **a separate terminal window, not in Claude**. Anything typed into Claude Code, including a `!` command, becomes part of the conversation.
 - Say where every credential ends up stored on their computer, and how to remove it.
 
+## 0. Where this is running
+
+The steps differ between the Claude desktop app's Code tab and Claude Code in a terminal, so work out which one first. `CLAUDE_CODE_ENTRYPOINT` in the environment usually says; if it's unset or unclear, ask the person in one line ("Are you in the Claude desktop app, or a terminal window?"). Assume the desktop app for people new to this.
+
+- **Desktop app:** commands that need the person's hands go in the app's built-in terminal: they click **Terminal** in the session's title bar (or press Ctrl+\`). Connectors are added from **+** next to the prompt box → **Add connectors**, and managed in **Settings → Connectors**.
+- **Terminal:** the person can run a command themselves by typing it after `!` in Claude Code. MCP servers are added with `claude mcp add` and signed in to with `/mcp`.
+- **A cloud session** (claude.ai/code, or **Cloud** chosen in the desktop app): stop here. The site has to be built on their own computer, and plugins don't load in the cloud. Tell them to start a new session with the environment set to **Local**, in an empty folder, and run this again.
+
 ## 1. See where they're starting
 
 Run `scripts/check.sh` (from this skill's folder). It prints what's installed and what's signed in, and changes nothing. Read it back to the person in plain words ("You have git and Node, but not the GitHub CLI yet"), then only do the steps they still need. If they've done all of this before, finish in a minute.
@@ -54,13 +62,16 @@ After installing, a new terminal window may be needed before the commands are fo
 The GitHub CLI is how Claude creates repositories, saves work, and opens pull requests on the person's behalf. It signs in through the browser, so no token changes hands.
 
 1. If they have no account, send them to github.com/signup and wait. Suggest turning on two-factor authentication when GitHub offers it.
-2. Have them type this into Claude Code themselves (the `!` runs it in their terminal). It needs their browser and a one-time code, so you can't run it for them:
+2. Have them run the sign-in themselves. It needs their browser and a one-time code, so you can't run it for them:
 
    ```
-   ! gh auth login --hostname github.com --git-protocol https --web
+   gh auth login --hostname github.com --git-protocol https --web
    ```
 
-   Tell them what will happen: a code appears, a browser tab opens, they paste the code there and approve.
+   - **Desktop app:** they open the built-in terminal (**Terminal** in the session's title bar), paste the command there, and press Enter.
+   - **Terminal:** they type it into Claude Code with `!` in front (`! gh auth login …`).
+
+   Tell them what will happen: a code appears, they press Enter to open the browser, paste the code there, and approve. Then they tell you they're done.
 3. Run `gh auth status` and confirm the username matches what they told you.
 4. Run `gh auth setup-git` so git uses that same sign-in when saving to GitHub.
 5. Set their name and email for git. For the email, suggest GitHub's private address, which keeps their real one off every public change:
@@ -79,15 +90,17 @@ Checkpoint: `gh auth status` shows them signed in, and `git config --global user
 Vercel's official MCP server lets Claude read their projects, deployments and build logs, and deploy, using a browser sign-in. Check vercel.com/docs/agent-resources/vercel-mcp for the current command if this one fails.
 
 1. Explain MCP in a sentence: it's how Claude gets permission to use another service on their behalf, and they can remove it any time.
-2. Add the server for all their projects:
+2. **Desktop app:** have them click **+** next to the prompt box → **Add connectors** (or **Connectors** → **Browse connectors**), search for **Vercel**, and connect it. If Vercel isn't in the directory, they add it as a custom connector in **Settings → Connectors** with the URL `https://mcp.vercel.com`. Either way, they sign in to Vercel in the browser that opens. If the new tools don't appear in this session, have them start a new session in the same folder and say "continue accounts setup".
+
+   **Terminal:** add the server for all their projects:
 
    ```
    claude mcp add --transport http vercel --scope user https://mcp.vercel.com
    ```
 
-3. Claude Code picks up new servers when it starts. Have them type `/exit`, then `claude --continue` to come back to this conversation.
-4. Have them type `/mcp`, choose **vercel**, and sign in in the browser. If they have no Vercel account, the sign-in page offers to create one: choose **Continue with GitHub**.
-5. Confirm it works by listing their Vercel projects or teams with the Vercel tools. An empty list is fine for a new account.
+   Claude Code picks up new servers when it starts, so have them type `/exit`, then `claude --continue` to come back to this conversation. Then they type `/mcp`, choose **vercel**, and sign in in the browser.
+3. If they have no Vercel account, the sign-in page offers to create one: choose **Continue with GitHub**.
+4. Confirm it works by listing their Vercel projects or teams with the Vercel tools. An empty list is fine for a new account.
 
 Checkpoint: the Vercel tools answer.
 
@@ -95,17 +108,13 @@ Checkpoint: the Vercel tools answer.
 
 The GitHub CLI already covers everything a website needs. GitHub's MCP server adds tools for issues, reviews and searching code. Offer it once, in one sentence; skip it if they don't want it.
 
-1. Add it with a browser sign-in first:
-
-   ```
-   claude mcp add --transport http --scope user github https://api.githubcopilot.com/mcp/
-   ```
-
-   Restart as in step 4, then `/mcp` → **github** → sign in.
+1. Add it with a browser sign-in first.
+   - **Desktop app:** **+** → **Add connectors** → **GitHub**, and approve in the browser.
+   - **Terminal:** `claude mcp add --transport http --scope user github https://api.githubcopilot.com/mcp/`, restart as in step 4, then `/mcp` → **github** → sign in.
 2. If the browser sign-in fails (it has been unreliable in Claude Code), the fallback is a token. Walk them through it without ever seeing it:
    - On GitHub: Settings → Developer settings → Personal access tokens → **Fine-grained tokens** → Generate. Limit it to the repositories they'll use, give it only the permissions they need (Contents, Pull requests and Issues: read and write; Metadata: read), and set an expiry.
    - Remove the server you added: `claude mcp remove github --scope user`.
-   - In **a separate terminal window**, they run the command below, pasting the token where it says. Tell them the token is then stored in Claude Code's settings on their computer, and that it stops working when it expires or they revoke it on GitHub.
+   - In **a separate terminal window** (the Terminal app on a Mac, PowerShell on Windows; not the app's built-in terminal or Claude Code, so the token never reaches this conversation), they run the command below, pasting the token where it says. Tell them the token is then stored in Claude Code's settings on their computer, and that it stops working when it expires or they revoke it on GitHub.
 
      ```
      claude mcp add --transport http --scope user github https://api.githubcopilot.com/mcp/ --header "Authorization: Bearer PASTE_TOKEN_HERE"
@@ -119,7 +128,7 @@ Run `scripts/check.sh` once more and give a short summary in plain words:
 
 - What's set up, and the GitHub username and Vercel account it's tied to
 - What was skipped, and why
-- How to undo each part: `gh auth logout`; `claude mcp remove vercel --scope user` (and `github`); revoking access from GitHub (Settings → Applications) and Vercel (Account Settings → Authentication)
+- How to undo each part: `gh auth logout`; disconnecting Vercel (and GitHub) in the desktop app's **Settings → Connectors**, or with `claude mcp remove vercel --scope user` in a terminal; revoking access from GitHub (Settings → Applications) and Vercel (Account Settings → Authentication)
 
 Then go back to whatever they were doing before, or, if they came here to start a site, offer `portfolio-starter`.
 

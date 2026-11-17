@@ -92,7 +92,7 @@ if command -v claude >/dev/null 2>&1; then
     fi
   done
 else
-  row "Claude Code CLI" "info" "not on PATH; check MCP with /mcp instead"
+  row "Claude Code CLI" "info" "not on PATH (normal in the desktop app); check connectors under + > Connectors"
 fi
 
 # Vercel CLI is optional
