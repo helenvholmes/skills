@@ -1,6 +1,6 @@
 # skills
 
-Pre-flight skills for shipping on web: accessibility, motion, layout, performance and security. One command, `audit`, runs all of them and returns a single report ranked by severity, then fixes only what you approve. Heavily borrows from others' skills such as [peteto](https://github.com/poteto/how) and [emil](https://github.com/emilkowalski/skills) albeit with my own flavor.
+Pre-flight skills for shipping on web: accessibility, motion, layout, performance and security, plus two for starting a site from scratch. One command, `audit`, runs all of them and returns a single report ranked by severity, then fixes only what you approve. Heavily borrows from others' skills such as [peteto](https://github.com/poteto/how) and [emil](https://github.com/emilkowalski/skills) albeit with my own flavor.
 
 | Skill | What it checks |
 |---|---|
@@ -10,6 +10,13 @@ Pre-flight skills for shipping on web: accessibility, motion, layout, performanc
 | `motion-review` | Flicker, motion that makes people wait, reduced-motion support, frame drops, animations running off screen |
 | `performance-audit` | Prunes unused pages, fonts, assets and packages, then measures what each page downloads and what loads where it shouldn't |
 | `security-audit` | Production dependency advisories, lockfile drift, unused risky features, headers and CSP, secrets, private pages |
+
+And two for getting a site started, built for people who are new to GitHub:
+
+| Skill | What it does |
+|---|---|
+| `portfolio-starter` | Interviews you about the site and what you know, recommends the simplest stack that fits, plans and builds it, gives you preview links, runs `audit`, and launches it on your own GitHub and Vercel |
+| `accounts-setup` | Installs git, the GitHub CLI and Node if they're missing, signs you in to GitHub with the GitHub CLI, and connects Claude to Vercel (and optionally GitHub) through MCP. Never asks you to paste a password or token. |
 
 The report opens as a page: findings grouped by severity, real colour swatches for every contrast problem, filters by check, and a box on each finding to tick what you want fixed and copy the request back to Claude. In Claude it's published as a private Artifact; elsewhere it opens in your browser. The skill writes the findings as data (`skills/audit/references/report-format.md`) and `skills/audit/scripts/build-report.mjs` builds the page, so every report has the same shape.
 
@@ -32,6 +39,21 @@ In Claude Code:
 
 Then ask for an audit in plain words ("audit this site before I ship it"), or call a skill directly, for example `/helenvholmes:audit` or `/helenvholmes:accessibility-audit`.
 
+### Starting a new site
+
+To start a portfolio from nothing, paste this into Claude Code in an empty folder:
+
+```
+Install the helenvholmes skills, then run /helenvholmes:portfolio-starter.
+I'm new to GitHub, so explain each new term the first time it comes up,
+and never ask me to paste a password or token into this chat.
+
+  /plugin marketplace add helenvholmes/skills
+  /plugin install helenvholmes@helenvholmes
+```
+
+It checks your setup first and runs `accounts-setup` if anything is missing.
+
 Or copy any folder from `skills/` into `~/.claude/skills/` to use it on its own, without the `helenvholmes:` prefix. Each check skill reads `../audit/references/principles.md` if it's there, so copy `audit` along with it to keep the opinions.
 
 ## What it needs
@@ -39,8 +61,15 @@ Or copy any folder from `skills/` into `~/.claude/skills/` to use it on its own,
 - A browser Claude can drive (the Claude desktop app's built-in browser, Claude in Chrome, or Playwright) for the layout, accessibility and motion checks.
 - Node.js, for the colour scripts in `skills/accessibility-audit/scripts/`.
 - The site running locally: a dev server, and ideally a production build.
+- For `portfolio-starter` and `accounts-setup`: a GitHub account and a Vercel account (both free; the skills help you make them), and permission to install software on your computer.
 
 ## Scripts
+
+`skills/accounts-setup/scripts/check.sh` reports what's installed and signed in for shipping a site, and changes nothing:
+
+```bash
+bash skills/accounts-setup/scripts/check.sh
+```
 
 The accessibility scripts also work on their own:
 

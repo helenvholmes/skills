@@ -1,6 +1,6 @@
 {
   "name": "helenvholmes",
-  "description": "Helen V. Holmes's pre-ship checks for websites: accessibility, motion, layout, performance and security.",
+  "description": "Helen V. Holmes's pre-ship checks for websites (accessibility, motion, layout, performance and security), plus a guided portfolio starter for people new to GitHub.",
   "owner": {
     "name": "Helen V. Holmes",
     "url": "https://helenvholmes.com"
@@ -9,7 +9,7 @@
     {
       "name": "helenvholmes",
       "source": "./",
-      "description": "Pre-ship checks for websites: accessibility, motion, layout, performance and security, run together by one audit skill."
+      "description": "Pre-ship checks for websites, run together by one audit skill, plus a guided portfolio starter and GitHub/Vercel account setup."
     }
   ]
 }
