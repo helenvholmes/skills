@@ -29,7 +29,7 @@ try {
 }
 
 const SEVERITIES = ["serious", "moderate", "minor"];
-const AREAS = ["Layout", "Accessibility", "Motion", "Performance", "Security"];
+const AREAS = ["Layout", "Accessibility", "Motion", "Performance", "Security", "Basics"];
 const HEX = /^#(?:[0-9a-f]{3}){1,2}$/i;
 const problems = [];
 const need = (cond, message) => cond || problems.push(message);

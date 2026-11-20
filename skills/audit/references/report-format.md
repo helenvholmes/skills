@@ -45,10 +45,10 @@ The audit report is written as JSON, then turned into a page by `scripts/build-r
 
 - **site, date, summary** are required. `source` says what was tested (dev server, build, live site).
 - **scope**: any labelled facts about what was covered. Each value is text or a list.
-- **checks**: optional notes per check, keyed by `Layout`, `Accessibility`, `Motion`, `Performance` or `Security`. `note` adds a line under the check's counts; `skipped` replaces the counts with the reason it didn't run. The page counts findings per check on its own.
+- **checks**: optional notes per check, keyed by `Layout`, `Accessibility`, `Motion`, `Performance`, `Security` or `Basics`. `note` adds a line under the check's counts; `skipped` replaces the counts with the reason it didn't run. The page counts findings per check on its own.
 - **findings**: the list, in the order you want them numbered. Numbering runs across the whole report, so "fix 3 and 7" is unambiguous.
   - `severity`: `serious`, `moderate` or `minor`, as defined in the audit skill.
-  - `area`: which check found it, one of the five above.
+  - `area`: which check found it, one of the six above (`Basics` for the basics sweep).
   - `title`: what's wrong, in a plain sentence.
   - `yourCall`: `true` when the fix touches something the author chose on purpose (a colour from the design file, a deliberate size). The page marks it "Your call".
   - `wcag`: the success criterion, when there is one.

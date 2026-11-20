@@ -39,7 +39,11 @@ Run each check skill in this order, following its own instructions. Layout comes
 
 Skip a check only when it truly can't apply (no motion at all on the site, say), and say in the report that you skipped it and why.
 
-Collect findings as you go rather than writing five reports. For each one, keep: what's wrong, where (file and line, page, theme, width), the evidence (a measured number, a screenshot, a tool's output), who it affects, and the fix. A finding without evidence is a guess; either verify it or list it under "needs checking".
+Then sweep every page for the basics: small things no single check owns, and easy to ship without because nothing breaks. File these findings under `Basics`.
+
+- **Favicon.** Every page links one (`<link rel="icon">`), the file it points to loads, and it reads at 16px on both light and dark browser tabs. An SVG favicon with an `apple-touch-icon` PNG (180×180, no transparency) covers today's browsers and phones' home screens. Without a link, browsers request `/favicon.ico` and log a 404, so either link one or serve that path. Pages that are separate sites (examples, demos) can have their own icon or none; don't give them the main site's.
+
+Collect findings as you go rather than writing a report per check. For each one, keep: what's wrong, where (file and line, page, theme, width), the evidence (a measured number, a screenshot, a tool's output), who it affects, and the fix. A finding without evidence is a guess; either verify it or list it under "needs checking".
 
 ## 3. Report
 
@@ -77,4 +81,4 @@ Don't fix anything until the user says which findings to act on. The report page
 
 ## When the request is narrower
 
-If the user asks for one area ("just check accessibility"), run that one skill directly; this skill is for "check everything". If they ask to re-run audits after a change, re-run all five and compare against the earlier findings: what's fixed, what's new, what's still open.
+If the user asks for one area ("just check accessibility"), run that one skill directly; this skill is for "check everything". If they ask to re-run audits after a change, re-run all five checks and the basics sweep, and compare against the earlier findings: what's fixed, what's new, what's still open.
