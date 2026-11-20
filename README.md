@@ -10,6 +10,7 @@ Pre-flight skills for shipping on web: accessibility, motion, layout, performanc
 | `motion-review` | Flicker, motion that makes people wait, reduced-motion support, frame drops, animations running off screen |
 | `performance-audit` | Prunes unused pages, fonts, assets and packages, then measures what each page downloads and what loads where it shouldn't |
 | `security-audit` | Production dependency advisories, lockfile drift, unused risky features, headers and CSP, secrets, private pages |
+| Basics sweep | Part of `audit`, not a skill of its own: small things every page needs, starting with a favicon that loads and reads at tab size |
 
 The report opens as a page: findings grouped by severity, real colour swatches for every contrast problem, filters by check, and a box on each finding to tick what you want fixed and copy the request back to Claude. In Claude it's published as a private Artifact; elsewhere it opens in your browser. The skill writes the findings as data (`skills/audit/references/report-format.md`) and `skills/audit/scripts/build-report.mjs` builds the page, so every report has the same shape.
 
