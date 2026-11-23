@@ -1,10 +1,24 @@
 {
   "name": "helenvholmes",
   "version": "0.2.0",
-  "description": "Pre-ship checks for websites: accessibility, motion, layout, performance and security, run together by one audit skill. Opinionated: it respects decisions the author made on purpose.",
-  "author": { "name": "Helen V. Holmes", "url": "https://helenvholmes.com" },
+  "description": "Pre-ship checks for websites (accessibility, motion, layout, performance and security, run together by one audit skill), plus a case study review for portfolios. Opinionated: it respects decisions the author made on purpose.",
+  "author": {
+    "name": "Helen V. Holmes",
+    "url": "https://helenvholmes.com"
+  },
   "homepage": "https://github.com/helenvholmes/skills",
   "repository": "https://github.com/helenvholmes/skills",
   "license": "MIT",
-  "keywords": ["audit", "accessibility", "a11y", "performance", "security", "motion", "responsive"]
+  "keywords": [
+    "audit",
+    "accessibility",
+    "a11y",
+    "performance",
+    "security",
+    "motion",
+    "responsive",
+    "portfolio",
+    "case-study",
+    "review"
+  ]
 }

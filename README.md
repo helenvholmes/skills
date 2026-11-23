@@ -1,6 +1,6 @@
 # skills
 
-Pre-flight skills for shipping on web: accessibility, motion, layout, performance and security. One command, `audit`, runs all of them and returns a single report ranked by severity, then fixes only what you approve. Heavily borrows from others' skills such as [poteto](https://github.com/poteto/how) and [emil](https://github.com/emilkowalski/skills) albeit with my own flavor.
+Pre-flight skills for shipping on web: accessibility, motion, layout, performance and security, plus a case study review for portfolios. One command, `audit`, runs all of them and returns a single report ranked by severity, then fixes only what you approve. Heavily borrows from others' skills such as [poteto](https://github.com/poteto/how) and [emil](https://github.com/emilkowalski/skills) albeit with my own flavor.
 
 | Skill | What it checks |
 |---|---|
@@ -11,6 +11,12 @@ Pre-flight skills for shipping on web: accessibility, motion, layout, performanc
 | `performance-audit` | Prunes unused pages, fonts, assets and packages, then measures what each page downloads and what loads where it shouldn't |
 | `security-audit` | Production dependency advisories, lockfile drift, unused risky features, headers and CSP, secrets, private pages |
 | Basics sweep | Part of `audit`, not a skill of its own: small things every page needs, starting with a favicon that loads and reads at tab size |
+
+And one for portfolios:
+
+| Skill | What it does |
+|---|---|
+| `review` | Reviews the case studies on a portfolio the way a hiring manager or client reads them, using Brian Lovin's [advice on presenting design work](https://brianlovin.com/writing/how-to-give-a-great-product-design-portfolio-presentation): context, the problem before the solution, constraints, what you tried, outcomes, and credit. Suggests the few changes that matter most and makes only the ones you pick. |
 
 The report opens as a page: findings grouped by severity, real colour swatches for every contrast problem, filters by check, and a box on each finding to tick what you want fixed and copy the request back to Claude. In Claude it's published as a private Artifact; elsewhere it opens in your browser. The skill writes the findings as data (`skills/audit/references/report-format.md`) and `skills/audit/scripts/build-report.mjs` builds the page, so every report has the same shape.
 
