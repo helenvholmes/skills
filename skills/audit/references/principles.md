@@ -14,6 +14,12 @@ Examples of what this rules out:
 
 What you *should* still report about a deliberate choice: anything that makes it fail for someone. A deliberate colour that fails contrast, a deliberate animation that flickers, a deliberate px size that ignores the user's text-size setting. Report the failure and its cost, and offer the smallest change that fixes it while keeping the intent (the closest passing colour, not a new palette). Say plainly that it's a deliberate choice and the call is theirs.
 
+## A finding needs evidence and a name
+
+Every finding rests on something you measured or saw: a number, a screenshot, a tool's output. A finding without evidence is a guess. Either verify it, or list it under "needs checking".
+
+Every finding also names the concept it breaks, and that concept's rule. "The corners look off" leaves whoever applies the fix to guess; "the nested radius isn't concentric: inner radius is outer radius minus padding" tells them exactly what to change. Use the term a designer or engineer would search for (concentric radii, optical alignment, type scale, measure, focus order, layout shift, cache busting), then state the rule precisely enough that the fix follows from it. If you can't name a concept, the finding may be a preference rather than a problem: say so, or drop it.
+
 ## Test with the real content
 
 The author hand-writes their content. Invented worst cases — a 300-character title, an empty list, a name in a script the site will never contain — aren't findings for content the author controls. What matters is that the real content works at every width.
