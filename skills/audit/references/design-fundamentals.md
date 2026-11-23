@@ -2,7 +2,7 @@
 
 The classic principles `design-critique` falls back on when `design-taste.md` says nothing. They come third in the order of authority: the author's taste, then these, then any other general advice. Where the taste file disagrees with a fundamental, the taste file wins and the fundamental isn't raised.
 
-Each section gives the idea in a sentence or two, then the **lenses**: concrete things to look for on a rendered page. A suggestion that rests on a fundamental names it, briefly, in the form `Rams: as little design as possible` or `Gestalt: proximity`, so the author can tell a borrowed rule from their own.
+Each section gives the idea in a sentence or two, then the **lenses**: concrete things to look for on a rendered page. A suggestion that rests on a fundamental names it, briefly, in the form `Rams: as little design as possible`, `Gestalt: proximity`, `Norman: feedback` or `Optical: concentric radii`, so the author can tell a borrowed rule from their own.
 
 These are summaries in this repo's own words. Read the sources for the full argument.
 
@@ -35,6 +35,20 @@ People read relationships from position and likeness before they read any words.
 
 Source: the Gestalt psychologists (Wertheimer, Koffka, Köhler), as applied to layout. See [principles of grouping](https://en.wikipedia.org/wiki/Principles_of_grouping).
 
+## Don Norman: how controls tell you what they do
+
+After Don Norman, [*The Design of Everyday Things*](https://en.wikipedia.org/wiki/The_Design_of_Everyday_Things). The rest of this file is about how a page looks at rest; this section is about what happens when someone uses it. Content states (empty, loading, error) belong to Rams' "Thorough"; this is about the controls:
+
+- **Signifiers.** A control shows what it does before anyone touches it. Lenses: a link with no underline or colour difference from the text around it, an icon-only button with no label or tooltip, a clickable card with nothing that says it's clickable.
+- **Feedback.** Every action gets a visible response, and quickly. Lenses: a submit button that does nothing visible while the request runs, a copy button with no "copied", a toggle whose new state you have to guess.
+- **States.** Hover, focus, pressed, disabled and in progress each look different, and each looks like the same control. Lenses: a disabled button that looks enabled (or the reverse), a pressed state identical to hover, a focus style on some controls and not others.
+- **Mapping.** A control sits next to what it changes, and moves the way its effect moves. Lenses: a filter bar far from the list it filters, a "next" arrow pointing the wrong way for the reading direction.
+- **Constraints.** Actions that can't work aren't offered, rather than failing afterwards. Lenses: a form that accepts a value only to reject it on submit, a date picker that allows dates that will be refused.
+- **Conventions (Jakob's law).** People spend most of their time on other sites, so they expect yours to work the same way: the logo goes home, the nav is where they look for it, underlined text is a link. Lenses: a familiar pattern changed for no gain, a convention followed in one place and broken in another.
+- **Target size and distance (Fitts's law).** Bigger, closer targets are faster to hit. Lenses: small controls that are used often, related actions placed far apart, a close button tucked in a corner far from where the pointer already is. WCAG 2.2 sets the floor at 24×24 CSS px (criterion 2.5.8).
+
+Sources: Don Norman, [*The Design of Everyday Things*](https://en.wikipedia.org/wiki/The_Design_of_Everyday_Things); Jakob Nielsen, [Jakob's law](https://www.nngroup.com/videos/jakobs-law-internet-ux/); Paul Fitts, [Fitts's law](https://en.wikipedia.org/wiki/Fitts%27s_law).
+
 ## Typography
 
 After Robert Bringhurst, [*The Elements of Typographic Style*](https://en.wikipedia.org/wiki/The_Elements_of_Typographic_Style). Type exists to honour the content, and most of its quality is in rhythm and proportion:
@@ -44,6 +58,7 @@ After Robert Bringhurst, [*The Elements of Typographic Style*](https://en.wikipe
 - **A scale.** Sizes come from a consistent ratio, with enough contrast between steps to read as different. Lenses: sizes a pixel or two apart, more sizes than the hierarchy has levels.
 - **Restraint.** A few typefaces and weights, each with a job. Lenses: a third family with no clear role, a weight used once.
 - **Small text and capitals.** Letter-spacing opens up for capitals and small sizes, and closes for large display sizes. Lenses: tracked-out lowercase, tight all-caps labels.
+- **Hanging punctuation.** Covered in `copy-fundamentals.md`, under "Punctuation set properly".
 
 ## Grids
 
@@ -53,6 +68,15 @@ After [Josef Müller-Brockmann](https://en.wikipedia.org/wiki/Josef_M%C3%BCller-
 - **Alignment is structure.** Lenses: elements that float free of every column line, images and text that start on different edges.
 - **Rhythm.** Vertical spacing comes from a scale, so the page has a beat. Lenses: gaps that are all slightly different, spacing that jumps rather than steps.
 - **Breaking the grid on purpose.** A deliberate break is a strong move only when everything else holds to the grid. Lenses: breaks that look accidental because nothing else is strict.
+
+## Optical adjustments
+
+Geometry and perception disagree, and the eye wins. These are long-standing craft conventions rather than one author's rules, so cite them as `Optical: <name>`:
+
+- **Concentric radii.** A rounded element inside another rounded element shares its centre: inner radius equals outer radius minus the padding between them. Lenses: a button or image inside a card whose corners look pinched or bulging, the same radius used at every level of nesting.
+- **Optical centring.** Shapes that aren't symmetric get nudged until they look centred, rather than centred by their box. Lenses: a play triangle that sits left of centre in its circle, an arrow or chevron that looks off-centre in its button.
+- **Icons beside text.** An icon lines up with the text next to it by cap height or x-height, not by the boxes they sit in. Lenses: icons that sit high or low against a label, icons a visibly different weight from the text they sit next to.
+- **Optical sizing.** Type cut for small sizes is sturdier and more open than type cut for display. A variable font's `opsz` axis should match the size it's set at. Lenses: display text that looks spindly or overly sturdy, small text that looks cramped, `font-optical-sizing: none` set with no reason given.
 
 ## Colour
 
