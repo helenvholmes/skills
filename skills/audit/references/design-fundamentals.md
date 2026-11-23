@@ -1,6 +1,6 @@
 # Design fundamentals
 
-The classic principles `design-critique` falls back on where `design-taste.md` says nothing. They come third in the order of authority: the author's taste, then these, then any other general advice. Where the taste file disagrees with a fundamental, the taste file wins and the fundamental isn't raised.
+The classic principles `design-critique` falls back on when `design-taste.md` says nothing. They come third in the order of authority: the author's taste, then these, then any other general advice. Where the taste file disagrees with a fundamental, the taste file wins and the fundamental isn't raised.
 
 Each section gives the idea in a sentence or two, then the **lenses**: concrete things to look for on a rendered page. A suggestion that rests on a fundamental names it, briefly, in the form `Rams: as little design as possible` or `Gestalt: proximity`, so the author can tell a borrowed rule from their own.
 
