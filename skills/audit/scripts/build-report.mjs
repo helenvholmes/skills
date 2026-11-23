@@ -30,7 +30,7 @@ try {
 
 const SEVERITIES = ["serious", "moderate", "minor"];
 const WEIGHTS = ["heavy", "medium", "light"];
-const AREAS = ["Layout", "Accessibility", "Motion", "Performance", "Security", "Basics", "Design"];
+const AREAS = ["Layout", "Accessibility", "Motion", "Prune", "Performance", "Security", "Basics", "Design"];
 const HEX = /^#(?:[0-9a-f]{3}){1,2}$/i;
 const IMAGE = /^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+=*$/;
 const MAX_IMAGE = 600 * 1024; // characters of data URI, about 450KB of image

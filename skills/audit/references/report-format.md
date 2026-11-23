@@ -47,10 +47,10 @@ The audit report is written as JSON, then turned into a page by `scripts/build-r
 - **kind**: `audit` (the default) or `critique`. A critique report comes from `design-critique` on its own: the page is titled as a design critique, shows only the Design check, and every finding must be a Design suggestion.
 - **site, date, summary** are required. `source` says what was tested (dev server, build, live site).
 - **scope**: any labelled facts about what was covered. Each value is text or a list.
-- **checks**: optional notes per check, keyed by `Layout`, `Accessibility`, `Motion`, `Performance`, `Security`, `Basics` or `Design`. `note` adds a line under the check's counts; `skipped` replaces the counts with the reason it didn't run. The page counts findings per check on its own.
+- **checks**: optional notes per check, keyed by `Layout`, `Accessibility`, `Motion`, `Prune`, `Performance`, `Security`, `Basics` or `Design`. `note` adds a line under the check's counts; `skipped` replaces the counts with the reason it didn't run. The page counts findings per check on its own.
 - **findings**: the list, in the order you want them numbered. Numbering runs across the whole report, so "fix 3 and 7" is unambiguous.
   - `severity`: `serious`, `moderate` or `minor`, as defined in the audit skill. Required for every area except `Design`.
-  - `area`: which check found it, one of the seven above (`Basics` for the basics sweep, `Design` for `design-critique`).
+  - `area`: which check found it, one of the eight above (`Basics` for the basics sweep, `Design` for `design-critique`).
   - `weight`: for `Design` findings only, which are suggestions rather than problems: `heavy`, `medium` or `light`, as defined in `design-critique`. They're shown in their own Suggestions groups after the audit's findings, and the boxes read "Apply" and "Won't apply" rather than "Fix this" and "Won't fix".
   - `basis`: for `Design` findings, where the suggestion comes from, shown as a tag: `Your taste`, a named fundamental such as `Gestalt: proximity`, or `General advice`.
   - `image`: a cropped screenshot of what the finding is about, `{ "src", "alt", "caption" }`. `src` must be a base64 `data:` URI (png, jpeg or webp, under about 450KB), since the published page can't reach local files. `alt` is required and says what the crop shows; `caption` is optional, usually the width and theme.
