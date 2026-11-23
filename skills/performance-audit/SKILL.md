@@ -29,12 +29,14 @@ After pruning, build for production and measure what a modern browser downloads 
 | Fonts | Count the preloaded and immediately used files, and their size. |
 | Images | Above-the-fold images, and whether the rest lazy-load. |
 | HTML | The page itself. |
+| On-demand chunks | Listed separately: what a feature downloads when it's first used (a hover preview, a modal, a map). Lazy loading moves the cost; the visitor who triggers it still pays it. |
 
 Use the build output and the files themselves (`gzip -c file | wc -c`), or the browser's network panel with cache disabled. Give real numbers in a table; "the bundle is large" isn't a finding.
 
 ## 3. Find what loads where it shouldn't
 
 - **Heavy libraries on every page** that only one feature uses. A barrel file (an `index.ts` that re-exports everything) often pulls a WebGL or charting library into every page that imports anything from it.
+- **Oversized dependencies:** a library far bigger than the job the code gives it. For every dependency that reaches the browser, including on-demand chunks, compare its bundled size with what the code actually calls: a 3D engine drawing one textured plane, a date library formatting one date, a chart library drawing one sparkline, a utility library for two functions. Name the smaller replacement (a few dozen lines of plain WebGL, `Intl.DateTimeFormat`, an inline SVG, native array methods) with before and after sizes, and what the swap would take to build and test. Report it even when the library already loads on demand.
 - **Features that can't run on a device but load anyway:** a hover effect downloaded on phones, a desktop-only preview loaded at narrow widths. Load these on demand, behind a check for the capability (`matchMedia('(hover: hover)')`, a width, WebGL support), and ideally only on first use.
 - **Animation libraries doing what CSS can.** Fades and staggered entrances in CSS cost nothing to download and run off the main thread.
 - **Images:** oversized files, no modern format (WebP or AVIF) with a fallback, missing `width`/`height` (layout shift), above-the-fold images lazy-loaded (they should load eagerly), below-the-fold ones not.
