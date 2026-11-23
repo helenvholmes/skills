@@ -122,6 +122,8 @@
   .tags { display: flex; flex-wrap: wrap; gap: 6px; }
   .tag { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--minor-bg); color: var(--minor); }
   .tag.yours { background: var(--moderate-bg); color: var(--moderate); }
+  .tag.wontfix { background: var(--minor-bg); color: var(--fg); }
+  .picks { display: flex; flex-direction: column; gap: 4px; }
   .pick { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); white-space: nowrap; cursor: pointer; }
   .pick input { width: 16px; height: 16px; accent-color: var(--accent); margin: 0; }
   .finding-body { display: flex; flex-direction: column; gap: 8px; padding-left: calc(2ch + 12px); min-width: 0; }
@@ -185,7 +187,7 @@
 
 <div class="bar" role="region" aria-label="Choose what to fix">
   <div class="bar-inner">
-    <p class="bar-text" id="bar-text" aria-live="polite">Tick the findings you want fixed.</p>
+    <p class="bar-text" id="bar-text" aria-live="polite">Tick the findings you want fixed, or the ones you won't fix.</p>
     <button type="button" class="secondary" id="clear" disabled>Clear</button>
     <button type="button" id="copy" disabled>Copy request</button>
     <input class="request" id="request" type="text" readonly hidden aria-label="Request to paste back to Claude">
@@ -245,10 +247,14 @@
 
   const findings = (data.findings || []).map((f, i) => ({ ...f, n: i + 1 }));
   const byArea = (area) => findings.filter((f) => f.area === area);
-  // A finding with an after screenshot has been fixed: it leaves the counts
-  // and severity groups for a Fixed group of its own.
-  const open = findings.filter((f) => !f.after);
+  // A finding with an after screenshot has been fixed, and one marked wontFix
+  // was left as it is on purpose. Either way it's done: it leaves the counts
+  // and severity groups for a group of its own.
+  const isDone = (f) => f.after || f.wontFix;
+  const open = findings.filter((f) => !isDone(f));
   const fixed = findings.filter((f) => f.after);
+  const wontFix = findings.filter((f) => f.wontFix && !f.after);
+  const wontLabel = (f) => (isSuggestion(f) ? "Won't apply" : "Won't fix");
 
   const findingHTML = (f) => {
     const parts = [];
@@ -279,17 +285,22 @@
     }
     if (f.evidence) parts.push(`<p><span class="label">Evidence:</span> ${fmt(f.evidence)}</p>`);
     if (f.fix) parts.push(`<p><span class="label">${isSuggestion(f) ? "Suggestion" : "Fix"}:</span> ${fmt(f.fix)}</p>`);
+    if (typeof f.wontFix === "string") parts.push(`<p><span class="label">${wontLabel(f)} because:</span> ${fmt(f.wontFix)}</p>`);
     if (f.where?.length) parts.push(`<div class="where">${f.where.map((w) => `<span>${esc(w)}</span>`).join("")}</div>`);
     const id = `pick-${f.n}`;
+    const picks = `<div class="picks">
+          <label class="pick" for="${id}"><input type="checkbox" id="${id}" data-n="${f.n}" data-pick="fix"> ${isSuggestion(f) ? "Apply" : "Fix this"}</label>
+          <label class="pick" for="skip-${f.n}"><input type="checkbox" id="skip-${f.n}" data-n="${f.n}" data-pick="skip"> ${wontLabel(f)}</label>
+        </div>`;
     const grade = isSuggestion(f) ? f.weight : f.severity;
     return `<article class="finding ${esc(grade)}" data-area="${esc(f.area)}" id="finding-${f.n}" aria-labelledby="title-${f.n}">
       <div class="finding-head">
         <span class="num">${f.n}</span>
         <div class="finding-title">
           <h3 id="title-${f.n}">${fmt(f.title)}</h3>
-          <div class="tags"><span class="tag">${esc(f.area)}</span>${f.basis ? `<span class="tag">${esc(f.basis)}</span>` : ""}${f.yourCall ? '<span class="tag yours">Your call</span>' : ""}${f.wcag ? `<span class="tag">WCAG ${esc(f.wcag)}</span>` : ""}${f.after ? `<span class="tag fixed">${isSuggestion(f) ? "Applied" : "Fixed"}</span>` : ""}</div>
+          <div class="tags"><span class="tag">${esc(f.area)}</span>${f.basis ? `<span class="tag">${esc(f.basis)}</span>` : ""}${f.yourCall ? '<span class="tag yours">Your call</span>' : ""}${f.wcag ? `<span class="tag">WCAG ${esc(f.wcag)}</span>` : ""}${f.after ? `<span class="tag fixed">${isSuggestion(f) ? "Applied" : "Fixed"}</span>` : f.wontFix ? `<span class="tag wontfix">${wontLabel(f)}</span>` : ""}</div>
         </div>
-        ${f.after ? "" : `<label class="pick" for="${id}"><input type="checkbox" id="${id}" data-n="${f.n}"> ${isSuggestion(f) ? "Apply" : "Fix this"}</label>`}
+        ${isDone(f) ? "" : picks}
       </div>
       <div class="finding-body">${parts.join("")}</div>
     </article>`;
@@ -303,14 +314,16 @@
     }
     const design = area === "Design";
     const counts = (design ? WEIGHTS : SEVERITIES)
-      .map(([k, label]) => [k, label, fs.filter((f) => !f.after && (design ? f.weight : f.severity) === k).length])
+      .map(([k, label]) => [k, label, fs.filter((f) => !isDone(f) && (design ? f.weight : f.severity) === k).length])
       .filter(([, , c]) => c);
     const done = fs.filter((f) => f.after).length;
+    const skipped = fs.filter((f) => f.wontFix && !f.after).length;
     const status = [
       counts.length
         ? counts.map(([k, label, c]) => `<span class="count ${k}">${c} ${label.toLowerCase()}</span>`).join("")
-        : `<span class="count clear">${design ? (done ? "Nothing left to apply" : "No suggestions") : done ? "Nothing left to fix" : "No issues"}</span>`,
+        : `<span class="count clear">${design ? (done || skipped ? "Nothing left to apply" : "No suggestions") : done || skipped ? "Nothing left to fix" : "No issues"}</span>`,
       done ? `<span class="count clear">${done} ${design ? "applied" : "fixed"}</span>` : "",
+      skipped ? `<span class="count minor">${skipped} ${design ? "won't apply" : "won't fix"}</span>` : "",
     ].join("");
     return `<div class="check"><span class="check-name">${area}</span><span class="check-status">${status}</span>${note?.note ? `<span class="check-note">${esc(note.note)}</span>` : ""}</div>`;
   };
@@ -351,6 +364,10 @@
         <div class="group-head"><h2 id="group-fixed">${critique ? "Applied" : "Fixed"}</h2><span class="count clear">${fixed.length}</span></div>
         ${fixed.map(findingHTML).join("")}
       </section>` : ""}
+    ${wontFix.length ? `<section class="group" aria-labelledby="group-wontfix">
+        <div class="group-head"><h2 id="group-wontfix">${critique ? "Won't apply" : "Won't fix"}</h2><span class="count minor">${wontFix.length}</span></div>
+        ${wontFix.map(findingHTML).join("")}
+      </section>` : ""}
     ${data.good?.length ? `<section class="group good" aria-labelledby="group-good"><h2 id="group-good">Already good</h2>
       <ul class="plain-list">${data.good.map((g) => `<li><span class="mark" aria-hidden="true">✓</span><span>${fmt(g)}</span></li>`).join("")}</ul></section>` : ""}
     ${data.notChecked?.length ? `<section class="group unchecked" aria-labelledby="group-unchecked"><h2 id="group-unchecked">Not checked</h2>
@@ -380,34 +397,57 @@
     }),
   );
 
-  // Picking what to fix. Ticks are remembered in this browser only.
+  // Picking what to fix, and what to leave on purpose. Each finding has a
+  // "Fix this" box and a "Won't fix" box; ticking one unticks the other.
+  // Ticks are remembered in this browser only.
   const KEY = `${critique ? "critique" : "audit"}-picks:${data.site}:${data.date}`;
   const boxes = [...document.querySelectorAll(".pick input")];
   try {
-    const saved = JSON.parse(localStorage.getItem(KEY) || "[]");
-    boxes.forEach((b) => (b.checked = saved.includes(Number(b.dataset.n))));
+    const saved = JSON.parse(localStorage.getItem(KEY) || "{}");
+    // Older reports saved a plain list of findings to fix.
+    const { fix = [], skip = [] } = Array.isArray(saved) ? { fix: saved } : saved;
+    boxes.forEach((b) => (b.checked = (b.dataset.pick === "skip" ? skip : fix).includes(Number(b.dataset.n))));
   } catch {}
   const barText = document.getElementById("bar-text");
-  const initialBarText = critique ? "Tick the suggestions you want applied." : "Tick the findings you want fixed.";
+  const initialBarText = critique
+    ? "Tick the suggestions you want applied, or the ones you won't apply."
+    : "Tick the findings you want fixed, or the ones you won't fix.";
   const copy = document.getElementById("copy");
   const clear = document.getElementById("clear");
   const field = document.getElementById("request");
-  const picked = () => boxes.filter((b) => b.checked).map((b) => Number(b.dataset.n));
+  const picked = (kind) => boxes.filter((b) => b.checked && b.dataset.pick === kind).map((b) => Number(b.dataset.n));
   const listText = (ns) => (ns.length < 2 ? String(ns[0]) : `${ns.slice(0, -1).join(", ")} and ${ns.at(-1)}`);
+  const noun = critique ? "suggestion" : "finding";
+  const nounFor = (ns) => `${noun}${ns.length === 1 ? "" : "s"}`;
+  const verb = critique ? "apply" : "fix";
   const request = () => {
-    const ns = picked();
-    const noun = critique ? "suggestion" : "finding";
-    return `${critique ? "Apply" : "Fix"} ${noun}${ns.length === 1 ? "" : "s"} ${listText(ns)} from the ${data.site} ${reportName} (${data.date}).`;
+    const fix = picked("fix");
+    const skip = picked("skip");
+    const parts = [];
+    if (fix.length) parts.push(`${critique ? "Apply" : "Fix"} ${nounFor(fix)} ${listText(fix)}`);
+    if (skip.length) parts.push(`${fix.length ? "mark" : "Mark"} ${nounFor(skip)} ${listText(skip)} as won't ${verb}`);
+    return `${parts.join(", and ")}, in the ${data.site} ${reportName} (${data.date}).`;
   };
   const update = () => {
-    const ns = picked();
-    barText.textContent = ns.length ? `${ns.length} picked: ${listText(ns)}.` : initialBarText;
-    copy.disabled = clear.disabled = !ns.length;
+    const fix = picked("fix");
+    const skip = picked("skip");
+    const parts = [];
+    if (fix.length) parts.push(`${fix.length} to ${verb}: ${listText(fix)}.`);
+    if (skip.length) parts.push(`${skip.length} won't ${verb}: ${listText(skip)}.`);
+    barText.textContent = parts.length ? parts.join(" ") : initialBarText;
+    copy.disabled = clear.disabled = !parts.length;
     copy.textContent = "Copy request";
     field.hidden = true;
-    try { localStorage.setItem(KEY, JSON.stringify(ns)); } catch {}
+    try { localStorage.setItem(KEY, JSON.stringify({ fix, skip })); } catch {}
   };
-  boxes.forEach((b) => b.addEventListener("change", update));
+  boxes.forEach((b) =>
+    b.addEventListener("change", () => {
+      if (b.checked) {
+        boxes.forEach((o) => { if (o !== b && o.dataset.n === b.dataset.n) o.checked = false; });
+      }
+      update();
+    }),
+  );
   clear.addEventListener("click", () => { boxes.forEach((b) => (b.checked = false)); update(); });
   copy.addEventListener("click", () => {
     const text = request();
