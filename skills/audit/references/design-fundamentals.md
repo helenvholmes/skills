@@ -21,7 +21,7 @@ All ten, in Rams' order, with what each means for a web page:
 - **Environmentally friendly.** It uses no more than it needs. For a page that means weight and work. Lenses: autoplaying video, images far larger than they're shown, fonts loaded and never used, animation running off screen. `performance-audit` and `motion-review` measure these; a critique names the principle and points there rather than measuring again.
 - **As little design as possible.** Every element earns its place. Lenses: decoration that carries no meaning (a border, shadow, icon or divider that would go unmissed), two elements doing one job, a style used once.
 
-Source: Dieter Rams, "Ten principles for good design" (Vitsœ).
+Source: Dieter Rams, ["Ten principles for good design"](https://www.vitsoe.com/us/about/good-design) (Vitsœ).
 
 ## Gestalt grouping
 
@@ -33,11 +33,11 @@ People read relationships from position and likeness before they read any words.
 - **Figure and ground.** One thing reads as in front. Lenses: a background busy enough to compete with the text on it, cards or panels that don't separate from the page.
 - **Common region.** A shared background or border makes a group. Lenses: boxes drawn around things that proximity alone would have grouped.
 
-Source: the Gestalt psychologists (Wertheimer, Koffka, Köhler), as applied to layout.
+Source: the Gestalt psychologists (Wertheimer, Koffka, Köhler), as applied to layout. See [principles of grouping](https://en.wikipedia.org/wiki/Principles_of_grouping).
 
 ## Typography
 
-After Robert Bringhurst, *The Elements of Typographic Style*. Type exists to honour the content, and most of its quality is in rhythm and proportion:
+After Robert Bringhurst, [*The Elements of Typographic Style*](https://en.wikipedia.org/wiki/The_Elements_of_Typographic_Style). Type exists to honour the content, and most of its quality is in rhythm and proportion:
 
 - **Measure.** Comfortable reading lines run about 45–75 characters, around 66 for a single column. Lenses: body text that runs the full width of a wide screen, or squeezes under about 40 characters.
 - **Leading.** Line spacing grows with line length and shrinks as type gets bigger. Lenses: headings set at body line-height (too loose), long lines set tight.
@@ -47,7 +47,7 @@ After Robert Bringhurst, *The Elements of Typographic Style*. Type exists to hon
 
 ## Grids
 
-After Josef Müller-Brockmann, *Grid Systems in Graphic Design*. A grid makes a page ordered and makes many pages read as one system:
+After [Josef Müller-Brockmann](https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann), *Grid Systems in Graphic Design*. A grid makes a page ordered and makes many pages read as one system:
 
 - **One grid, used consistently.** Lenses: content widths that change from section to section for no reason, gutters that differ between similar components.
 - **Alignment is structure.** Lenses: elements that float free of every column line, images and text that start on different edges.
@@ -56,7 +56,7 @@ After Josef Müller-Brockmann, *Grid Systems in Graphic Design*. A grid makes a 
 
 ## Colour
 
-After Josef Albers, *Interaction of Color*. Colour is relative: the same value looks different against different neighbours, so judge it on the page, never as a hex value in isolation:
+After Josef Albers, [*Interaction of Color*](https://yalebooks.yale.edu/book/9780300179354/interaction-of-color/). Colour is relative: the same value looks different against different neighbours, so judge it on the page, never as a hex value in isolation:
 
 - **Context.** Lenses: an accent that reads well on one background and muddy on another, a grey that turns warm or cool beside a strong colour.
 - **Quantity.** How much of a colour is used changes what it means. Lenses: an accent used so often it stops signalling anything.
@@ -65,7 +65,7 @@ After Josef Albers, *Interaction of Color*. Colour is relative: the same value l
 
 ## Data and charts
 
-After Edward Tufte, *The Visual Display of Quantitative Information*. Use this section only when the page has charts, tables or other data displays:
+After Edward Tufte, [*The Visual Display of Quantitative Information*](https://www.edwardtufte.com/book/the-visual-display-of-quantitative-information/). Use this section only when the page has charts, tables or other data displays:
 
 - **Data-ink.** Most of the ink should show data. Lenses: heavy gridlines, borders on every cell, 3D effects, legends that could be direct labels.
 - **Show the comparison.** A display should make the comparison that matters easy. Lenses: values that belong together split across charts with different scales.
