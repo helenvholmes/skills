@@ -46,6 +46,7 @@ Skip a check only when it truly can't apply (no motion at all on the site, say),
 Then sweep every page for the basics: small things no single check owns, and easy to ship without because nothing breaks. File these findings under `Basics`.
 
 - **Favicon.** Every page links one (`<link rel="icon">`), the file it points to loads, and it reads at 16px on both light and dark browser tabs. An SVG favicon with an `apple-touch-icon` PNG (180×180, no transparency) covers today's browsers and phones' home screens. Without a link, browsers request `/favicon.ico` and log a 404, so either link one or serve that path. Pages that are separate sites (examples, demos) can have their own icon or none; don't give them the main site's.
+- **Link previews.** Every page someone might share has Open Graph and X card tags in the HTML the server sends, and a share image that loads and still reads at phone-feed size and as a square thumbnail. Follow `social-preview` steps 2 and 3: run its `check-preview.mjs` on each page and look at the image with `preview-crops.mjs`. File what it finds here, under `Basics`.
 
 Collect findings as you go rather than writing a report per check. For each one, keep: what's wrong, the concept it breaks and that concept's rule, where (file and line, page, theme, width), the evidence (a measured number, a screenshot, a tool's output), who it affects, and the fix. A finding without evidence is a guess (see "A finding needs evidence and a name" in `references/principles.md`).
 

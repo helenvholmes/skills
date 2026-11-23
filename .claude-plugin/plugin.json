@@ -1,7 +1,7 @@
 {
   "name": "helenvholmes",
-  "version": "0.2.0",
-  "description": "Pre-ship checks for websites (accessibility, motion, layout, unused code, performance and security, plus a design critique, run together by one audit skill), plus a case study review for portfolios and a copywriting skill for what a site says. Opinionated: it respects decisions the author made on purpose.",
+  "version": "0.3.0",
+  "description": "Pre-ship checks for websites (accessibility, motion, layout, unused code, performance and security, plus a design critique, run together by one audit skill), a social-preview skill for share cards and link previews, plus a case study review for portfolios and a copywriting skill for what a site says. Opinionated: it respects decisions the author made on purpose.",
   "author": {
     "name": "Helen V. Holmes",
     "url": "https://helenvholmes.com"
@@ -23,6 +23,9 @@
     "case-study",
     "review",
     "design-critique",
-    "copywriting"
+    "copywriting",
+    "social-preview",
+    "open-graph",
+    "og-image"
   ]
 }

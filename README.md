@@ -12,7 +12,13 @@ Pre-flight skills for shipping on web: accessibility, motion, layout, unused cod
 | `performance-audit` | Runs `prune` first, then measures what each page downloads and what loads where it shouldn't |
 | `security-audit` | Production dependency advisories, lockfile drift and whether the lockfile installs cleanly on your host, unused risky features, headers and CSP, secrets, private pages |
 | `design-critique` | Suggestions rather than failures: hierarchy, spacing, type, grids, colour and detail on the rendered pages, judged by your own taste in [`design-taste.md`](skills/audit/references/design-taste.md) first, then Rams, Gestalt, Norman, Bringhurst, Müller-Brockmann, optical adjustments, Albers and Tufte ([`design-fundamentals.md`](skills/audit/references/design-fundamentals.md)). Each suggestion is weighted heavy, medium or light and names its basis. Runs last in `audit`, or on its own as a design critique. |
-| Basics sweep | Part of `audit`, not a skill of its own: small things every page needs, starting with a favicon that loads and reads at tab size |
+| Basics sweep | Part of `audit`, not a skill of its own: small things every page needs, starting with a favicon that loads and reads at tab size, and link previews checked the way `social-preview` does |
+
+One for when a site gets shared:
+
+| Skill | What it does |
+|---|---|
+| `social-preview` | Gets pages ready to be shared: Open Graph and X card tags on every page, in the HTML crawlers actually read, and a 1200×630 share image built from the site's own colours and type. Checks what a crawler sees (including the image's real size, read from the file), shows the image the way feeds shrink it and chat apps crop it to a square, and explains how to refresh previews platforms have cached. |
 
 And two for what a site says:
 
@@ -70,6 +76,16 @@ node skills/accessibility-audit/scripts/contrast.mjs '#c95e46' '#f9f3ef'
 
 # The passing colour nearest to a failing one, keeping its hue
 node skills/accessibility-audit/scripts/fit-aa.mjs '#c95e46' '#f9f3ef' '#f9f5ef'
+```
+
+The share-preview scripts do too:
+
+```bash
+# What a link preview will show for a page, and what will break it
+node skills/social-preview/scripts/check-preview.mjs https://example.com/
+
+# A page showing a share image as feeds shrink it and chat apps crop it
+node skills/social-preview/scripts/preview-crops.mjs og-image.png crops.html
 ```
 
 `axe-sweep.js`, `focus-log.js`, `text-size.js`, `elements.js` (elements doing a job another element was made for, like a clickable `<div>` or a link that's really a button) and `target-size.js` (pointer targets under 24×24 CSS px, and whether spacing or an exception saves them) run inside the page, as does `skills/layout-check/scripts/widows.js`, which lists headings and paragraphs whose last line is a single word; each explains its use at the top.
