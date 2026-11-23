@@ -18,7 +18,7 @@ Copy can't create desire; it can only meet the desire a reader already has and p
 
 Lenses: a home page pitching features to visitors who don't yet know they have the problem; a pricing or sign-up page still explaining what the product is; one page trying to speak to every stage at once, so the headline fits none.
 
-Source: Eugene Schwartz, *Breakthrough Advertising*.
+Source: Eugene Schwartz, [*Breakthrough Advertising*](https://openlibrary.org/works/OL2625224W).
 
 ## David Ogilvy: the headline does the work
 
@@ -29,7 +29,7 @@ Far more people read the headline than the body, so the headline carries the pro
 - **Captions get read.** People read the line under an image more than the body around it. Lenses: images, screenshots and case study figures with no caption, or a caption that only labels ("Dashboard") instead of saying what to notice.
 - **Long copy is fine if every line informs.** Lenses: copy cut so short it leaves the reader's real questions unanswered (price, who it's for, what happens next); length made of adjectives rather than facts.
 
-Source: David Ogilvy, *Ogilvy on Advertising* and *Confessions of an Advertising Man*.
+Source: [David Ogilvy](https://en.wikipedia.org/wiki/David_Ogilvy_(businessman)), *Ogilvy on Advertising* and *Confessions of an Advertising Man*.
 
 ## Steve Krug: don't make me think
 
@@ -40,7 +40,7 @@ A page should be self-evident: a visitor should get it without effort, and every
 - **Instructions must die.** If a control needs explaining, the control is the problem. Lenses: a sentence next to a button or form telling people how to use it.
 - **Plain names over clever ones.** Lenses: marketing-coined names for ordinary things (a "Workspace Hub" that's just settings), navigation labels people have to decode.
 
-Source: Steve Krug, *Don't Make Me Think*.
+Source: Steve Krug, [*Don't Make Me Think*](https://sensible.com/dont-make-me-think/).
 
 ## Nielsen Norman Group: people scan
 
@@ -51,7 +51,7 @@ On the web, people read a small fraction of the words on a page, mostly the star
 - **One idea per paragraph.** Lenses: long paragraphs mixing several points; lists written as prose.
 - **Link text says where it goes.** Lenses: "click here", "learn more", "read more" repeated down a page, each meaningless out of context.
 
-Source: Nielsen Norman Group's research on how people read on the web (nngroup.com).
+Source: Nielsen Norman Group, [How users read on the web](https://www.nngroup.com/articles/how-users-read-on-the-web/) and [the F-shaped pattern](https://www.nngroup.com/articles/f-shaped-pattern-reading-web-content/).
 
 ## George Orwell: six rules
 
@@ -66,7 +66,7 @@ General writing rules, and the base under everything above:
 
 Lenses: stock phrases ("in today's fast-paced world", "take it to the next level"); business jargon ("leverage", "seamless", "solutions", "empower", "unlock"); passive sentences that hide who does what ("mistakes were made", "your data is protected" with no word on how or by whom).
 
-Source: George Orwell, "Politics and the English Language".
+Source: George Orwell, ["Politics and the English Language"](https://www.orwellfoundation.com/the-orwell-foundation/orwell/essays-and-other-works/politics-and-the-english-language/).
 
 ## April Dunford: positioning comes first
 
@@ -74,7 +74,7 @@ Copy can only be as clear as the positioning behind it. Positioning answers: wha
 
 Lenses: a page that never says who it's for; claims every competitor could also make ("easy to use", "all-in-one"); features listed with no value attached; a category the reader can't name after the first screen; differences from the real alternative (often a spreadsheet, an agency or doing nothing) left unsaid.
 
-Source: April Dunford, *Obviously Awesome*.
+Source: April Dunford, [*Obviously Awesome*](https://www.aprildunford.com/books).
 
 ## Kathy Sierra: make them badass
 
@@ -84,4 +84,4 @@ People don't want to be good at your product; they want to be good at what the p
 - **Show the badass, not the product.** Lenses: testimonials that praise the product ("great tool!") rather than describe what the person achieved with it; screenshots of an empty interface instead of real work done in it.
 - **Save the reader's attention.** Every confusing word, unanswered question or extra choice drains the attention they need to act. Lenses: too many choices at once (five calls to action on one screen); terms used before they're explained.
 
-Source: Kathy Sierra, *Badass: Making Users Awesome*.
+Source: Kathy Sierra, [*Badass: Making Users Awesome*](https://www.oreilly.com/library/view/badass-making-users/9781491919057/).
