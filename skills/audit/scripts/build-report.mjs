@@ -29,11 +29,16 @@ try {
 }
 
 const SEVERITIES = ["serious", "moderate", "minor"];
-const AREAS = ["Layout", "Accessibility", "Motion", "Performance", "Security"];
+const WEIGHTS = ["heavy", "medium", "light"];
+const AREAS = ["Layout", "Accessibility", "Motion", "Performance", "Security", "Basics", "Design"];
 const HEX = /^#(?:[0-9a-f]{3}){1,2}$/i;
+const IMAGE = /^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+=*$/;
+const MAX_IMAGE = 600 * 1024; // characters of data URI, about 450KB of image
 const problems = [];
 const need = (cond, message) => cond || problems.push(message);
+const critique = data.kind === "critique";
 
+need(data.kind === undefined || ["audit", "critique"].includes(data.kind), 'kind must be "audit" or "critique"');
 need(typeof data.site === "string" && data.site, "site: the site's name or address is required");
 need(typeof data.date === "string" && data.date, "date: required, e.g. 2026-11-13");
 need(typeof data.summary === "string" && data.summary, "summary: one or two sentences are required");
@@ -41,8 +46,26 @@ need(Array.isArray(data.findings), "findings: must be a list (it can be empty)")
 (data.findings || []).forEach((f, i) => {
   const at = `findings[${i}]`;
   need(f.title, `${at}.title is required`);
-  need(SEVERITIES.includes(f.severity), `${at}.severity must be one of ${SEVERITIES.join(", ")}`);
   need(AREAS.includes(f.area), `${at}.area must be one of ${AREAS.join(", ")}`);
+  if (f.area === "Design") {
+    need(WEIGHTS.includes(f.weight), `${at}.weight must be one of ${WEIGHTS.join(", ")} (Design findings are weighted suggestions)`);
+  } else {
+    need(!critique, `${at}.area must be Design in a critique`);
+    need(SEVERITIES.includes(f.severity), `${at}.severity must be one of ${SEVERITIES.join(", ")}`);
+    const c = f.concept || {};
+    need(
+      typeof c.name === "string" && c.name && typeof c.rule === "string" && c.rule,
+      `${at}.concept needs a name and a rule, e.g. { "name": "Concentric radii", "rule": "Inner radius equals outer radius minus the padding" }`,
+    );
+  }
+  for (const key of ["image", "after"]) {
+    if (f[key] === undefined) continue;
+    const img = f[key] || {};
+    need(typeof img.src === "string" && IMAGE.test(img.src), `${at}.${key}.src must be a base64 data URI (png, jpeg or webp)`);
+    need(typeof img.src !== "string" || img.src.length <= MAX_IMAGE, `${at}.${key}.src is too large: crop it tighter or save it as jpeg`);
+    need(typeof img.alt === "string" && img.alt, `${at}.${key}.alt is required: describe what the crop shows`);
+  }
+  if (f.after !== undefined) need(f.image, `${at}.after needs an image to compare against: the screenshot from before the fix`);
   if (f.table) {
     need(Array.isArray(f.table.columns) && Array.isArray(f.table.rows), `${at}.table needs columns and rows`);
     (f.table.rows || []).forEach((r, j) =>
@@ -74,7 +97,7 @@ const escHtml = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>
 const json = JSON.stringify(data).replace(/<\//g, "<\\/").replace(/<!--/g, "<\\!--");
 
 let page = template
-  .replace("{{TITLE}}", escHtml(`${data.site} audit`))
+  .replace("{{TITLE}}", escHtml(`${data.site} ${critique ? "design critique" : "audit"}`))
   .replace("{{DATA}}", () => json);
 if (standalone) {
   // No explicit <head>/<body>: the browser puts the title, links and styles
@@ -83,5 +106,15 @@ if (standalone) {
 }
 writeFileSync(output, page);
 
-const counts = SEVERITIES.map((s) => `${data.findings.filter((f) => f.severity === s).length} ${s}`).join(", ");
-console.log(`Wrote ${output}: ${data.findings.length} findings (${counts}).`);
+// Fixed findings (those with an after screenshot) are counted on their own.
+const open = data.findings.filter((f) => !f.after);
+const fixedCount = data.findings.length - open.length;
+const tally = (list, key) =>
+  list.map((v) => [v, open.filter((f) => f[key] === v).length]).filter(([, n]) => n).map(([v, n]) => `${n} ${v}`);
+const findings = open.filter((f) => f.area !== "Design").length;
+const suggestions = open.length - findings;
+const parts = [];
+if (findings || !suggestions) parts.push(`${findings} open findings${findings ? ` (${tally(SEVERITIES, "severity").join(", ")})` : ""}`);
+if (suggestions) parts.push(`${suggestions} open suggestions (${tally(WEIGHTS, "weight").join(", ")})`);
+if (fixedCount) parts.push(`${fixedCount} fixed`);
+console.log(`Wrote ${output}: ${parts.join(", ")}.`);
