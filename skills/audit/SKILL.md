@@ -10,7 +10,7 @@ One command that runs all the checks this plugin has and reports back once. The 
 | Skill | What it covers |
 |---|---|
 | `layout-check` | Every width from 320px to 2560px with the real content: no sideways scroll, nothing overlapping, columns that line up |
-| `accessibility-audit` | WCAG 2.2 AA: automated scan of every page in every theme, palette contrast, a real keyboard pass, reflow, text size, reduced motion |
+| `accessibility-audit` | WCAG 2.2 AA: automated scan of every page in every theme, palette contrast, a real keyboard pass, semantic HTML, reflow, text size, reduced motion |
 | `motion-review` | Whether each animation has a reason, works with reduced motion, doesn't flicker, and never makes someone wait |
 | `performance-audit` | Pruning what's unused, then measuring what each page downloads and what's loaded that shouldn't be |
 | `security-audit` | Dependency advisories, lockfile drift, headers and CSP, secrets, private pages |

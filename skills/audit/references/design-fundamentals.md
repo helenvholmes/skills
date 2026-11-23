@@ -8,13 +8,18 @@ These are summaries in this repo's own words. Read the sources for the full argu
 
 ## Dieter Rams: ten principles of good design
 
-Good design is innovative, useful, aesthetic, understandable, unobtrusive, honest, long-lasting, thorough down to the last detail, environmentally friendly, and as little design as possible. For a web page, five of them do most of the work:
+All ten, in Rams' order, with what each means for a web page:
 
-- **As little design as possible.** Every element earns its place. Lenses: decoration that carries no meaning (a border, shadow, icon or divider that would go unmissed), two elements doing one job, a style used once.
-- **Understandable.** The page explains itself. Lenses: what the page is and what to do next is clear in the first viewport, without reading the small print.
+- **Innovative.** New where it makes something possible or easier, never as an end in itself. Lenses: a novel interaction that makes people relearn something familiar (hijacked scrolling, navigation hidden behind a gesture); a platform feature left unused where it would plainly help.
+- **Useful.** The design serves what the page is for, and anything that distracts from that works against it. Lenses: what visitors came for pushed below an intro or decoration; sections that answer no one's question; a hero that could sit on any site.
+- **Aesthetic.** How it looks is part of how well it works, because people spend time with it. Lenses: rough edges noticed before the content (uneven spacing, image treatments that don't match, type that fights itself); quality that drops from the home page to the inner pages.
+- **Understandable.** The page explains itself. Lenses: what the page is for and what the call to action is is clear in the first viewport, without reading the small print.
 - **Unobtrusive.** In tools, the design stays out of the way of the task. Lenses: chrome competing with content, colour or weight spent on controls rather than on what the user came for.
 - **Honest.** The design doesn't pretend. Lenses: something styled as a button that isn't one, a link that looks like plain text, an image of an interface standing in for the real thing.
+- **Long-lasting.** It avoids fashion, so it doesn't look dated next year. Lenses: an effect that pins the site to this year's trend where the content will outlive it; content that goes stale on its own (a hard-coded copyright year, a "new" badge, a design trend from a year you can name).
 - **Thorough down to the last detail.** The details are part of the design. Lenses: states left unstyled (empty, loading, error, long content), mismatched radii or icon sizes, one-off spacing.
+- **Environmentally friendly.** It uses no more than it needs. For a page that means weight and work. Lenses: autoplaying video, images far larger than they're shown, fonts loaded and never used, animation running off screen. `performance-audit` and `motion-review` measure these; a critique names the principle and points there rather than measuring again.
+- **As little design as possible.** Every element earns its place. Lenses: decoration that carries no meaning (a border, shadow, icon or divider that would go unmissed), two elements doing one job, a style used once.
 
 Source: Dieter Rams, "Ten principles for good design" (Vitsœ).
 

@@ -1,6 +1,6 @@
 ---
 name: accessibility-audit
-description: Audit a website against WCAG 2.2 AA the way a careful human tester would — an automated axe scan of every page in every theme and colour scheme, contrast measured for the whole palette including hover and focus states, a real keyboard pass with actual key presses, reflow at 320px, the browser's default text size, and reduced motion — then fix contrast with the closest passing colour. Use this whenever the user asks for an accessibility or a11y audit, WCAG or ADA compliance, contrast checks, keyboard or screen reader support, or "is this accessible?", even if they only mention one of those.
+description: Audit a website against WCAG 2.2 AA the way a careful human tester would — an automated axe scan of every page in every theme and colour scheme, contrast measured for the whole palette including hover and focus states, a real keyboard pass with actual key presses, semantic HTML (the right element for each job: buttons, links, headings, lists, forms), reflow at 320px, the browser's default text size, and reduced motion — then fix contrast with the closest passing colour. Use this whenever the user asks for an accessibility or a11y audit, WCAG or ADA compliance, contrast checks, keyboard or screen reader support, or "is this accessible?", even if they only mention one of those.
 ---
 
 # Accessibility audit
@@ -64,18 +64,36 @@ Check by reading the rendered HTML and the accessibility tree:
 - Images: alt text that says what the image shows, and `alt=""` for decoration. When a link wraps only an image, the link needs the name.
 - `lang` on `<html>`, a distinct `<title>` per page.
 
-## 6. Reflow, zoom and text size
+## 6. The right element for the job
+
+Steps 2 and 5 check that what's there is named and valid. This one asks whether it's the right element at all. A `<div>` with a click handler passes axe and still can't be reached by keyboard or announced as a control. HTML's own elements bring focus, keys, states and meaning for free, and each hand-built copy has to rebuild all of it.
+
+Run `scripts/elements.js` on every page, and again with each menu, dialog and form open. It lists elements doing a job another element was made for, with a reason for each. Treat its list as leads: look at each one, and confirm the clickable ones by clicking and tabbing. It can't see everything, so read the markup as well for what's below.
+
+Each rule, with the concept to name in the finding:
+
+- **Action or destination.** A `<button>` does something on this page; an `<a href>` goes somewhere with a URL. Watch for `<a href="#">` or a link with no `href` that opens a menu, and a `<button>` whose only job is to navigate (it can't be opened in a new tab or copied).
+- **Native before ARIA.** If an HTML element has the role built in, use it: `<button>` over `<div role="button" tabindex="0">`, `<dialog>` over a `role="dialog"` overlay, `<details>`/`<summary>` for a show-and-hide section, `<select>` or radios for a fixed set of options, `<input type="checkbox">` over `role="checkbox"`. A custom widget is only right when no element does the job, and then it needs the full keyboard pattern from the ARIA Authoring Practices.
+- **Controls you can click are controls you can reach.** Anything that responds to a click is a button or link, or sits inside one. A card that's clickable all over keeps one real link (the title) and stretches its hit area with a pseudo-element, rather than a click handler on the card.
+- **State on the control.** `aria-expanded` and `aria-pressed` go on the button that changes them, not on the panel or a wrapper.
+- **Structure carries meaning.** Headings for anything people skim by, not bold text. `<ul>`/`<ol>` for lists, including nav links and card grids, not bullet characters or stacked `<div>`s. `<table>` with `<th>` and `scope` for data with rows and columns, and CSS grid, not a table, for layout. Landmarks once each where they fit: `<header>`, `<nav>`, `<main>`, `<footer>`, with `<article>` for self-contained items and `<aside>` for asides.
+- **Forms say what they ask.** Every field has a `<label>`, not just a placeholder. Related radios or checkboxes sit in a `<fieldset>` with a `<legend>` that asks the question. The input type matches the data (`email`, `tel`, `url`, `number`, `search`), with `autocomplete` where it applies, so phones bring up the right keyboard and browsers can fill it in.
+- **Smaller meanings.** `<time datetime>` for dates, `<figure>`/`<figcaption>` for captioned images, `<blockquote>` and `<cite>` for quotes, `<abbr title>` the first time an abbreviation appears, `<address>` for contact details. These are minor, so report them only when they're clearly missing, not one by one.
+
+Severity follows who is blocked. A control that keyboard users can't reach, or that's announced as plain text, is **serious**. A fake heading or list, ungrouped choices or a placeholder label is **moderate**. A generic input type or a missing `<time>` is **minor**. In the fix, swap the element and remove what the native one makes redundant (`tabindex="0"`, the role, the keydown handler), and check that the styles still apply: buttons bring their own font, padding, border and background, so reset them.
+
+## 7. Reflow, zoom and text size
 
 - **320px wide** (WCAG reflow): nothing scrolls sideways, nothing is cut off.
 - **Text size:** run `scripts/text-size.js`. It simulates a visitor whose browser default text size is 24px instead of 16px, and reports which text scales and which is stuck. Text set in `px` ignores this setting. Page zoom still works, so this isn't a WCAG failure, but it's a real cost for people who set a larger default. Report it, and if the px sizes are deliberate (to match a design), say so and leave the call to the author.
 
-## 7. Reduced motion
+## 8. Reduced motion
 
 Turn on reduced-motion emulation and walk the site. Movement and scaling should stop; opacity fades can stay. Infinite animations should stop. Anything that follows the cursor or reacts to scroll should calm down or stop. `motion-review` covers motion in more depth.
 
 Some browser tools can emulate the colour scheme but not reduced motion. If yours can't, review the CSS (`prefers-reduced-motion` queries) and every script that animates, and say under "Not checked" that reduced motion was reviewed in code, not watched.
 
-## 8. Fixing contrast: the closest passing colour
+## 9. Fixing contrast: the closest passing colour
 
 When a colour fails, don't pick a replacement by eye. Use:
 
@@ -87,7 +105,7 @@ The first colour is the one to change; the rest are every colour it must contras
 
 When you apply a fitted colour, leave a comment next to it with the original value and why it changed.
 
-## 9. Report
+## 10. Report
 
 Use the shape in `../audit/SKILL.md` if you're running as part of an audit; otherwise the same headings: Serious, Moderate, Minor, Already good, Not checked. For contrast, a table of every theme with its ratios beats prose. Always list under "Not checked" what only a person can test: a screen reader (VoiceOver: Cmd+F5 on macOS, triple-click the side button on iPhone), a forced-colours or high-contrast mode, and voice control.
 
