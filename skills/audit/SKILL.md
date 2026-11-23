@@ -12,6 +12,7 @@ One command that runs all the checks this plugin has and reports back once. The 
 | `layout-check` | Every width from 320px to 2560px with the real content: no sideways scroll, nothing overlapping, columns that line up |
 | `accessibility-audit` | WCAG 2.2 AA: automated scan of every page in every theme, palette contrast, a real keyboard pass, semantic HTML, target size, reflow, text size, reduced motion |
 | `motion-review` | Whether each animation has a reason, works with reduced motion, doesn't flicker, and never makes someone wait |
+| `typesetting` | How the type is set: measure, leading, letter-spacing, tabular figures, faked bold or italic, justification, and the marks (curly quotes, dashes, ×, −, …, non-breaking spaces, hanging punctuation) |
 | `prune` | Unused pages, components, assets, fonts, exports and packages, code that never runs, and tests that never run or test code that's gone |
 | `performance-audit` | Measuring what each page downloads, once pruned, and what's loaded that shouldn't be |
 | `security-audit` | Dependency advisories, lockfile drift, headers and CSP, secrets, private pages |
@@ -31,15 +32,16 @@ Spend a few minutes learning the site before testing it. You need to know:
 
 ## 2. Run the checks
 
-Run each check skill in this order, following its own instructions. Layout comes first because overflow and broken breakpoints distort every later measurement; prune comes before performance because unused files and packages distort its numbers; security barely needs the browser. The design critique comes last, once the problems are known, so it doesn't suggest polish for something already failing.
+Run each check skill in this order, following its own instructions. Layout comes first because overflow and broken breakpoints distort every later measurement; prune comes before performance because unused files and packages distort its numbers; security barely needs the browser. The design critique comes last, once the problems are known, so it doesn't suggest polish for something already failing; that includes `typesetting`'s findings, so the critique doesn't call `typesetting` again inside an audit.
 
 1. `layout-check`
 2. `accessibility-audit`
 3. `motion-review`
-4. `prune`
-5. `performance-audit`
-6. `security-audit`
-7. `design-critique`, adding its suggestions after the findings
+4. `typesetting`
+5. `prune`
+6. `performance-audit`
+7. `security-audit`
+8. `design-critique`, adding its suggestions after the findings
 
 Skip a check only when it truly can't apply (no motion at all on the site, say), and say in the report that you skipped it and why.
 

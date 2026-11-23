@@ -88,15 +88,7 @@ Source: Kathy Sierra, [*Badass: Making Users Awesome*](https://www.oreilly.com/l
 
 ## Punctuation set properly
 
-Small marks the reader never notices when they're right, and notices as sloppiness when they're wrong. Check them in the rendered page, not only the source, since fonts and CSS change how they sit.
-
-- **Em dashes close up.** An em dash in a sentence touches the words on both sides, with no spaces: "the result—not the tool". Lenses: spaced em dashes ("the result — not the tool"); a hyphen or a double hyphen standing in for a dash ("the result - not the tool", "the result--not the tool"). Ranges take an en dash, also unspaced ("2019–2024").
-- **Hanging punctuation.** Opening quotation marks, bullets and similar marks sit in the margin, so the letters line up with the text edge and the left edge reads as straight. Lenses: a pull quote or blockquote whose first line looks indented by its opening quote mark; list bullets that push the text in so it no longer lines up with the paragraphs around it. Fix with `hanging-punctuation: first` where the browser supports it (only Safari, as of writing), and a negative `text-indent` the width of the mark (about `-0.4em` for a curly quote; check it at the actual font) on elements that always start with one.
-- **Curly quotes and apostrophes, facing the right way.** Quotation marks and apostrophes are curly (“ ” ‘ ’), not the straight marks a keyboard types. An apostrophe that stands in for missing letters always curls like a closing quote, even at the start of a word. Lenses: straight `"` and `'` in body copy, headings or buttons; a backwards apostrophe in "‘90s" or "‘til" (should be "’90s", "’til"). Code samples keep their straight quotes, and feet and inches take primes (′ ″), not quote marks.
-- **Real symbols, not stand-ins.** A multiplication sign for dimensions and multiples, a minus sign for negative numbers, and an ellipsis as one character. Lenses: "1920x1080" or "3x faster" (should be "1920×1080", "3× faster"); a hyphen as a minus ("-5°" for "−5°"); three full stops for "…".
-- **Non-breaking spaces where a break would mislead.** A number stays on the same line as its unit, and short fixed phrases stay together. Lenses: "10" at the end of one line and "km" at the start of the next; "p." split from its page number; a currency code split from its amount. This is for meaning, not for fixing a stranded last word; `layout-check` handles those with CSS.
-
-Sources: [*The Chicago Manual of Style*](https://www.chicagomanualofstyle.org/) on dashes, quotation marks, symbols and spacing; Robert Bringhurst, [*The Elements of Typographic Style*](https://en.wikipedia.org/wiki/The_Elements_of_Typographic_Style), on hanging punctuation.
+How the marks are set (dashes, curly quotes and apostrophes, real symbols, non-breaking spaces, hanging punctuation) is checked by `typesetting`, under "Marks" in `../../typesetting/references/rules.md`, because those have a right answer and `audit` runs that check on every site. A copy review that notices a wrong mark names it and points there.
 
 ## Consistent style
 

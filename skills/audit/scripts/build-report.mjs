@@ -30,7 +30,7 @@ try {
 
 const SEVERITIES = ["serious", "moderate", "minor"];
 const WEIGHTS = ["heavy", "medium", "light"];
-const AREAS = ["Layout", "Accessibility", "Motion", "Prune", "Performance", "Security", "Basics", "Design"];
+const AREAS = ["Layout", "Accessibility", "Motion", "Typesetting", "Prune", "Performance", "Security", "Basics", "Design"];
 const HEX = /^#(?:[0-9a-f]{3}){1,2}$/i;
 const IMAGE = /^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+=*$/;
 const MAX_IMAGE = 600 * 1024; // characters of data URI, about 450KB of image
@@ -50,7 +50,7 @@ need(Array.isArray(data.findings), "findings: must be a list (it can be empty)")
   if (f.area === "Design") {
     need(WEIGHTS.includes(f.weight), `${at}.weight must be one of ${WEIGHTS.join(", ")} (Design findings are weighted suggestions)`);
   } else {
-    need(!critique, `${at}.area must be Design in a critique`);
+    need(!critique || f.area === "Typesetting", `${at}.area must be Design or Typesetting in a critique`);
     need(SEVERITIES.includes(f.severity), `${at}.severity must be one of ${SEVERITIES.join(", ")}`);
     const c = f.concept || {};
     need(

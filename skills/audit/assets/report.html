@@ -208,10 +208,11 @@
     ["medium", "Medium"],
     ["light", "Light"],
   ];
-  const AUDIT_AREAS = ["Layout", "Accessibility", "Motion", "Prune", "Performance", "Security", "Basics"];
+  const AUDIT_AREAS = ["Layout", "Accessibility", "Motion", "Typesetting", "Prune", "Performance", "Security", "Basics"];
   const critique = data.kind === "critique";
   const hasDesign = critique || (data.findings || []).some((f) => f.area === "Design") || (data.checks || {}).Design;
-  const AREAS = critique ? ["Design"] : hasDesign ? [...AUDIT_AREAS, "Design"] : AUDIT_AREAS;
+  const hasTypesetting = (data.findings || []).some((f) => f.area === "Typesetting") || (data.checks || {}).Typesetting;
+  const AREAS = critique ? (hasTypesetting ? ["Typesetting", "Design"] : ["Design"]) : hasDesign ? [...AUDIT_AREAS, "Design"] : AUDIT_AREAS;
   const reportName = critique ? "design critique" : "audit";
   const isSuggestion = (f) => f.area === "Design";
 
