@@ -12,10 +12,11 @@ Pre-flight skills for shipping on web: accessibility, motion, layout, performanc
 | `security-audit` | Production dependency advisories, lockfile drift and whether the lockfile installs cleanly on your host, unused risky features, headers and CSP, secrets, private pages |
 | Basics sweep | Part of `audit`, not a skill of its own: small things every page needs, starting with a favicon that loads and reads at tab size |
 
-And one for portfolios:
+And two for what a site says:
 
 | Skill | What it does |
 |---|---|
+| `copywriting` | Writes or reviews the words on a site (headlines, calls to action, about pages, link and button text) using Schwartz's stages of awareness, Ogilvy, Krug, Nielsen Norman Group, Orwell, April Dunford's positioning and Kathy Sierra's *Badass*, with formulas (AIDA, PAS, BAB, FAB, the 4 U's) for drafting. Every suggestion names the principle behind it; the principles are in [`skills/audit/references/copy-fundamentals.md`](skills/audit/references/copy-fundamentals.md). |
 | `review` | Reviews the case studies on a portfolio the way a hiring manager or client reads them, using Brian Lovin's [advice on presenting design work](https://brianlovin.com/writing/how-to-give-a-great-product-design-portfolio-presentation): context, the problem before the solution, constraints, what you tried, outcomes, and credit. Suggests the few changes that matter most and makes only the ones you pick. |
 
 The report opens as a page: findings grouped by severity, real colour swatches for every contrast problem, filters by check, and a box on each finding to tick what you want fixed and copy the request back to Claude. In Claude it's published as a private Artifact; elsewhere it opens in your browser. The skill writes the findings as data (`skills/audit/references/report-format.md`) and `skills/audit/scripts/build-report.mjs` builds the page, so every report has the same shape.
