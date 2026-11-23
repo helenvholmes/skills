@@ -85,3 +85,12 @@ People don't want to be good at your product; they want to be good at what the p
 - **Save the reader's attention.** Every confusing word, unanswered question or extra choice drains the attention they need to act. Lenses: too many choices at once (five calls to action on one screen); terms used before they're explained.
 
 Source: Kathy Sierra, [*Badass: Making Users Awesome*](https://www.oreilly.com/library/view/badass-making-users/9781491919057/).
+
+## Punctuation set properly
+
+Small marks the reader never notices when they're right, and notices as sloppiness when they're wrong. Check them in the rendered page, not only the source, since fonts and CSS change how they sit.
+
+- **Em dashes close up.** An em dash in a sentence touches the words on both sides, with no spaces: "the result—not the tool". Lenses: spaced em dashes ("the result — not the tool"); a hyphen or a double hyphen standing in for a dash ("the result - not the tool", "the result--not the tool"). Ranges take an en dash, also unspaced ("2019–2024").
+- **Hanging punctuation.** Opening quotation marks, bullets and similar marks sit in the margin, so the letters line up with the text edge and the left edge reads as straight. Lenses: a pull quote or blockquote whose first line looks indented by its opening quote mark; list bullets that push the text in so it no longer lines up with the paragraphs around it. Fix with `hanging-punctuation: first` where the browser supports it (only Safari, as of writing), and a negative `text-indent` the width of the mark (about `-0.4em` for a curly quote; check it at the actual font) on elements that always start with one.
+
+Sources: [*The Chicago Manual of Style*](https://www.chicagomanualofstyle.org/) on dashes; Robert Bringhurst, [*The Elements of Typographic Style*](https://en.wikipedia.org/wiki/The_Elements_of_Typographic_Style), on hanging punctuation.
