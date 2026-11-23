@@ -77,7 +77,9 @@ Never put a secret's value in the report, even a dead one: name the file and com
 
 ## 4. Ask, then fix
 
-Don't fix anything until the user says which findings to act on. The report page lets them tick findings and copy a request like "Fix findings 1, 3 and 7 from the example.com audit"; the numbers match the report. Then:
+Don't fix anything until the user says which findings to act on. The report page gives each finding a "Fix this" box and a "Won't fix" box, and copies a request like "Fix findings 1, 3 and 7, and mark finding 5 as won't fix, in the example.com audit"; the numbers match the report. Then:
+
+- For each finding marked won't fix, change nothing in the code. Set its `wontFix` to `true`, or to the user's reason if they gave one (don't ask for one), and rebuild the report with the fixes below so it moves to the Won't fix group.
 
 - Fix in small, separate changes the user could revert one at a time. This author likes to try a change, look at it, and back it out if it's wrong.
 - For colour fixes, find the closest passing colour rather than inventing a new one (`accessibility-audit` has a script for this).
