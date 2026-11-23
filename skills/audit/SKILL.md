@@ -45,7 +45,7 @@ Then sweep every page for the basics: small things no single check owns, and eas
 
 - **Favicon.** Every page links one (`<link rel="icon">`), the file it points to loads, and it reads at 16px on both light and dark browser tabs. An SVG favicon with an `apple-touch-icon` PNG (180×180, no transparency) covers today's browsers and phones' home screens. Without a link, browsers request `/favicon.ico` and log a 404, so either link one or serve that path. Pages that are separate sites (examples, demos) can have their own icon or none; don't give them the main site's.
 
-Collect findings as you go rather than writing a report per check. For each one, keep: what's wrong, the concept it breaks and that concept's rule, where (file and line, page, theme, width), the evidence (a measured number, a screenshot, a tool's output), who it affects, and the fix. A finding without evidence is a guess; either verify it or list it under "needs checking".
+Collect findings as you go rather than writing a report per check. For each one, keep: what's wrong, the concept it breaks and that concept's rule, where (file and line, page, theme, width), the evidence (a measured number, a screenshot, a tool's output), who it affects, and the fix. A finding without evidence is a guess (see "A finding needs evidence and a name" in `references/principles.md`).
 
 For any finding you can see on the page (an overflow, a contrast failure, a misaligned edge, a missing focus ring), take a cropped screenshot as you find it and note the width, theme and state you took it in. It goes in the report as the finding's `image`, and it's the "before" you'll compare against once it's fixed.
 
@@ -71,7 +71,7 @@ What goes in each section:
 
 Within each finding, lead with what's wrong in plain words, then the number that proves it, then the fix. Give file paths with line numbers.
 
-Name the concept behind every finding, and its rule. "The corners look off" leaves whoever applies the fix to guess; "the nested radius isn't concentric: inner radius is outer radius minus padding" tells them exactly what to change. Use the term a designer or engineer would search for (concentric radii, optical alignment, type scale, measure, focus order, layout shift, cache busting), then state the rule precisely enough that the fix follows from it. If you can't name a concept, the finding may be a preference rather than a problem: say so, or drop it.
+Name the concept behind every finding, and its rule, as "A finding needs evidence and a name" in `references/principles.md` describes. The rule should be precise enough that the fix follows from it; if you can't name a concept, say the finding may be a preference, or drop it.
 
 Use a table when several items share the same columns (contrast ratios per theme, sizes per page), and swatches for every contrast finding. Separate the objective failures from the design calls: a colour that fails 4.5:1 is objective, but *which* colour replaces it is the author's call, so mark it `yourCall` and say what you'd pick and why.
 
