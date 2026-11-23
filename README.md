@@ -1,15 +1,16 @@
 # skills
 
-Pre-flight skills for shipping on web: accessibility, motion, layout, performance and security, plus a case study review for portfolios. One command, `audit`, runs all of them and returns a single report ranked by severity, then fixes only what you approve. Heavily borrows from others' skills such as [peteto](https://github.com/poteto/how) and [emil](https://github.com/emilkowalski/skills) albeit with my own flavor.
+Pre-flight skills for shipping on web: accessibility, motion, layout, performance and security, plus a case study review for portfolios. One command, `audit`, runs all of them and returns a single report ranked by severity, then fixes only what you approve. Heavily borrows from others' skills such as [poteto](https://github.com/poteto/how) and [emil](https://github.com/emilkowalski/skills) albeit with my own flavor.
 
 | Skill | What it checks |
 |---|---|
 | `audit` | Runs everything below in order and reports once |
-| `layout-check` | Every width from 320px to 2560px with your real content: sideways scrolling, overlap, alignment, awkward ranges between breakpoints |
+| `layout-check` | Every width from 320px to 2560px with your real content: sideways scrolling, overlap, alignment, widows and orphans, awkward ranges between breakpoints |
 | `accessibility-audit` | WCAG 2.2 AA: axe on every page in every theme, palette contrast including hover and focus, a real keyboard pass, reflow, text size, reduced motion. Fixes failing colours with the nearest passing one. |
 | `motion-review` | Flicker, motion that makes people wait, reduced-motion support, frame drops, animations running off screen |
 | `performance-audit` | Prunes unused pages, fonts, assets and packages, then measures what each page downloads and what loads where it shouldn't |
 | `security-audit` | Production dependency advisories, lockfile drift, unused risky features, headers and CSP, secrets, private pages |
+| Basics sweep | Part of `audit`, not a skill of its own: small things every page needs, starting with a favicon that loads and reads at tab size |
 
 And one for portfolios:
 

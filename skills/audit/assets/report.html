@@ -22,6 +22,9 @@
     --minor-bg: #edf0f3;
     --good: #1c6a3a;
     --good-bg: #e5f3e9;
+    --heavy: #1d5c86;
+    --medium: #6a3d9a;
+    --light: #4a5562;
     --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
     --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
   }
@@ -30,14 +33,14 @@
       --bg: #121518; --surface: #191d21; --fg: #e5e8eb; --muted: #9ba5af; --line: #2d343b;
       --accent: #84bde4; --serious: #ff948a; --serious-bg: #3a1815; --moderate: #f1b860;
       --moderate-bg: #32250f; --minor: #b6bfc9; --minor-bg: #242a30; --good: #86d6a1;
-      --good-bg: #15301f; color-scheme: dark;
+      --good-bg: #15301f; --heavy: #84bde4; --medium: #c9a8f0; --light: #b6bfc9; color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
     --bg: #121518; --surface: #191d21; --fg: #e5e8eb; --muted: #9ba5af; --line: #2d343b;
     --accent: #84bde4; --serious: #ff948a; --serious-bg: #3a1815; --moderate: #f1b860;
     --moderate-bg: #32250f; --minor: #b6bfc9; --minor-bg: #242a30; --good: #86d6a1;
-    --good-bg: #15301f; color-scheme: dark;
+    --good-bg: #15301f; --heavy: #84bde4; --medium: #c9a8f0; --light: #b6bfc9; color-scheme: dark;
   }
 
   * { box-sizing: border-box; }
@@ -80,6 +83,9 @@
   .count.moderate { color: var(--moderate); }
   .count.minor { color: var(--minor); }
   .count.clear { color: var(--good); }
+  .count.heavy { color: var(--heavy); }
+  .count.medium { color: var(--medium); }
+  .count.light { color: var(--light); }
   .check-note { font-size: 12px; color: var(--muted); }
   .filter-label { font-size: 13px; color: var(--muted); }
 
@@ -102,7 +108,15 @@
   .finding.serious { --stripe: var(--serious); }
   .finding.moderate { --stripe: var(--moderate); }
   .finding.minor { --stripe: var(--minor); }
-  .finding-head { display: flex; gap: 12px; align-items: flex-start; }
+  .finding.heavy { --stripe: var(--heavy); }
+  .finding.medium { --stripe: var(--medium); }
+  .finding.light { --stripe: var(--light); }
+  .shot { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+  .shot img { display: block; max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; }
+  .shot figcaption { font-size: 13px; color: var(--muted); }
+  .shot figcaption .label { color: var(--fg); }
+  .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 12px; align-items: start; }
+  .tag.fixed { background: var(--good-bg); color: var(--good); }  .finding-head { display: flex; gap: 12px; align-items: flex-start; }
   .num { font-family: var(--font-mono); font-size: 13px; color: var(--muted); padding-top: 2px; font-variant-numeric: tabular-nums; min-width: 2ch; }
   .finding-title { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
   .tags { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -113,6 +127,7 @@
   .finding-body { display: flex; flex-direction: column; gap: 8px; padding-left: calc(2ch + 12px); min-width: 0; }
   .finding-body ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
   .label { font-weight: 600; }
+  .concept { padding-left: 10px; border-left: 2px solid var(--line); }
   .where { display: flex; flex-wrap: wrap; gap: 4px 12px; font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); overflow-wrap: anywhere; }
   .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
   table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
@@ -185,7 +200,18 @@
     ["moderate", "Moderate"],
     ["minor", "Minor"],
   ];
-  const AREAS = ["Layout", "Accessibility", "Motion", "Performance", "Security"];
+  // Design findings are suggestions, weighted rather than graded.
+  const WEIGHTS = [
+    ["heavy", "Heavy"],
+    ["medium", "Medium"],
+    ["light", "Light"],
+  ];
+  const AUDIT_AREAS = ["Layout", "Accessibility", "Motion", "Performance", "Security", "Basics"];
+  const critique = data.kind === "critique";
+  const hasDesign = critique || (data.findings || []).some((f) => f.area === "Design") || (data.checks || {}).Design;
+  const AREAS = critique ? ["Design"] : hasDesign ? [...AUDIT_AREAS, "Design"] : AUDIT_AREAS;
+  const reportName = critique ? "design critique" : "audit";
+  const isSuggestion = (f) => f.area === "Design";
 
   const esc = (s) =>
     String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -219,9 +245,18 @@
 
   const findings = (data.findings || []).map((f, i) => ({ ...f, n: i + 1 }));
   const byArea = (area) => findings.filter((f) => f.area === area);
+  // A finding with an after screenshot has been fixed: it leaves the counts
+  // and severity groups for a Fixed group of its own.
+  const open = findings.filter((f) => !f.after);
+  const fixed = findings.filter((f) => f.after);
 
   const findingHTML = (f) => {
     const parts = [];
+    const shot = (img, label) =>
+      `<figure class="shot"><img src="${esc(img.src)}" alt="${esc(img.alt)}" loading="lazy">${label || img.caption ? `<figcaption>${label ? `<span class="label">${label}</span>${img.caption ? " · " : ""}` : ""}${img.caption ? fmt(img.caption) : ""}</figcaption>` : ""}</figure>`;
+    if (f.image && f.after) parts.push(`<div class="shots">${shot(f.image, "Before")}${shot(f.after, "After")}</div>`);
+    else if (f.image) parts.push(shot(f.image));
+    if (f.concept) parts.push(`<p class="concept"><span class="label">${esc(f.concept.name)}:</span> ${fmt(f.concept.rule)}</p>`);
     if (f.body) parts.push(paras(f.body));
     if (f.list) parts.push(`<ul>${f.list.map((li) => `<li>${fmt(li)}</li>`).join("")}</ul>`);
     if (f.swatches) {
@@ -243,17 +278,18 @@
       );
     }
     if (f.evidence) parts.push(`<p><span class="label">Evidence:</span> ${fmt(f.evidence)}</p>`);
-    if (f.fix) parts.push(`<p><span class="label">Fix:</span> ${fmt(f.fix)}</p>`);
+    if (f.fix) parts.push(`<p><span class="label">${isSuggestion(f) ? "Suggestion" : "Fix"}:</span> ${fmt(f.fix)}</p>`);
     if (f.where?.length) parts.push(`<div class="where">${f.where.map((w) => `<span>${esc(w)}</span>`).join("")}</div>`);
     const id = `pick-${f.n}`;
-    return `<article class="finding ${esc(f.severity)}" data-area="${esc(f.area)}" id="finding-${f.n}" aria-labelledby="title-${f.n}">
+    const grade = isSuggestion(f) ? f.weight : f.severity;
+    return `<article class="finding ${esc(grade)}" data-area="${esc(f.area)}" id="finding-${f.n}" aria-labelledby="title-${f.n}">
       <div class="finding-head">
         <span class="num">${f.n}</span>
         <div class="finding-title">
           <h3 id="title-${f.n}">${fmt(f.title)}</h3>
-          <div class="tags"><span class="tag">${esc(f.area)}</span>${f.yourCall ? '<span class="tag yours">Your call</span>' : ""}${f.wcag ? `<span class="tag">WCAG ${esc(f.wcag)}</span>` : ""}</div>
+          <div class="tags"><span class="tag">${esc(f.area)}</span>${f.basis ? `<span class="tag">${esc(f.basis)}</span>` : ""}${f.yourCall ? '<span class="tag yours">Your call</span>' : ""}${f.wcag ? `<span class="tag">WCAG ${esc(f.wcag)}</span>` : ""}${f.after ? `<span class="tag fixed">${isSuggestion(f) ? "Applied" : "Fixed"}</span>` : ""}</div>
         </div>
-        <label class="pick" for="${id}"><input type="checkbox" id="${id}" data-n="${f.n}"> Fix this</label>
+        ${f.after ? "" : `<label class="pick" for="${id}"><input type="checkbox" id="${id}" data-n="${f.n}"> ${isSuggestion(f) ? "Apply" : "Fix this"}</label>`}
       </div>
       <div class="finding-body">${parts.join("")}</div>
     </article>`;
@@ -265,10 +301,17 @@
     if (note && note.skipped) {
       return `<div class="check"><span class="check-name">${area}</span><span class="check-status muted">Skipped: ${esc(note.skipped)}</span></div>`;
     }
-    const counts = SEVERITIES.map(([k, label]) => [k, label, fs.filter((f) => f.severity === k).length]).filter(([, , c]) => c);
-    const status = counts.length
-      ? counts.map(([k, label, c]) => `<span class="count ${k}">${c} ${label.toLowerCase()}</span>`).join("")
-      : '<span class="count clear">No issues</span>';
+    const design = area === "Design";
+    const counts = (design ? WEIGHTS : SEVERITIES)
+      .map(([k, label]) => [k, label, fs.filter((f) => !f.after && (design ? f.weight : f.severity) === k).length])
+      .filter(([, , c]) => c);
+    const done = fs.filter((f) => f.after).length;
+    const status = [
+      counts.length
+        ? counts.map(([k, label, c]) => `<span class="count ${k}">${c} ${label.toLowerCase()}</span>`).join("")
+        : `<span class="count clear">${design ? (done ? "Nothing left to apply" : "No suggestions") : done ? "Nothing left to fix" : "No issues"}</span>`,
+      done ? `<span class="count clear">${done} ${design ? "applied" : "fixed"}</span>` : "",
+    ].join("");
     return `<div class="check"><span class="check-name">${area}</span><span class="check-status">${status}</span>${note?.note ? `<span class="check-note">${esc(note.note)}</span>` : ""}</div>`;
   };
 
@@ -277,7 +320,7 @@
 
   document.getElementById("app").innerHTML = `
     <header>
-      <span class="eyebrow">Pre-ship audit</span>
+      <span class="eyebrow">${critique ? "Design critique" : "Pre-ship audit"}</span>
       <h1>${esc(data.site)}</h1>
       <div class="meta">${[data.date, data.source].filter(Boolean).map((m) => `<span>${fmt(m)}</span>`).join("")}</div>
     </header>
@@ -289,13 +332,25 @@
       ${["All", ...AREAS.filter((a) => byArea(a).length)].map((a) => `<button type="button" data-area="${a}" aria-pressed="${a === "All"}">${a}</button>`).join("")}
     </div>
     ${SEVERITIES.map(([k, label]) => {
-      const fs = findings.filter((f) => f.severity === k);
+      const fs = open.filter((f) => !isSuggestion(f) && f.severity === k);
       if (!fs.length) return "";
       return `<section class="group" aria-labelledby="group-${k}">
         <div class="group-head"><h2 id="group-${k}">${label}</h2><span class="count ${k}">${fs.length}</span></div>
         ${fs.map(findingHTML).join("")}
       </section>`;
     }).join("")}
+    ${WEIGHTS.map(([k, label]) => {
+      const fs = open.filter((f) => isSuggestion(f) && f.weight === k);
+      if (!fs.length) return "";
+      return `<section class="group" aria-labelledby="group-${k}">
+        <div class="group-head"><h2 id="group-${k}">${label} suggestions</h2><span class="count ${k}">${fs.length}</span></div>
+        ${fs.map(findingHTML).join("")}
+      </section>`;
+    }).join("")}
+    ${fixed.length ? `<section class="group" aria-labelledby="group-fixed">
+        <div class="group-head"><h2 id="group-fixed">${critique ? "Applied" : "Fixed"}</h2><span class="count clear">${fixed.length}</span></div>
+        ${fixed.map(findingHTML).join("")}
+      </section>` : ""}
     ${data.good?.length ? `<section class="group good" aria-labelledby="group-good"><h2 id="group-good">Already good</h2>
       <ul class="plain-list">${data.good.map((g) => `<li><span class="mark" aria-hidden="true">✓</span><span>${fmt(g)}</span></li>`).join("")}</ul></section>` : ""}
     ${data.notChecked?.length ? `<section class="group unchecked" aria-labelledby="group-unchecked"><h2 id="group-unchecked">Not checked</h2>
@@ -326,13 +381,14 @@
   );
 
   // Picking what to fix. Ticks are remembered in this browser only.
-  const KEY = `audit-picks:${data.site}:${data.date}`;
+  const KEY = `${critique ? "critique" : "audit"}-picks:${data.site}:${data.date}`;
   const boxes = [...document.querySelectorAll(".pick input")];
   try {
     const saved = JSON.parse(localStorage.getItem(KEY) || "[]");
     boxes.forEach((b) => (b.checked = saved.includes(Number(b.dataset.n))));
   } catch {}
   const barText = document.getElementById("bar-text");
+  const initialBarText = critique ? "Tick the suggestions you want applied." : "Tick the findings you want fixed.";
   const copy = document.getElementById("copy");
   const clear = document.getElementById("clear");
   const field = document.getElementById("request");
@@ -340,11 +396,12 @@
   const listText = (ns) => (ns.length < 2 ? String(ns[0]) : `${ns.slice(0, -1).join(", ")} and ${ns.at(-1)}`);
   const request = () => {
     const ns = picked();
-    return `Fix ${ns.length === 1 ? "finding" : "findings"} ${listText(ns)} from the ${data.site} audit (${data.date}).`;
+    const noun = critique ? "suggestion" : "finding";
+    return `${critique ? "Apply" : "Fix"} ${noun}${ns.length === 1 ? "" : "s"} ${listText(ns)} from the ${data.site} ${reportName} (${data.date}).`;
   };
   const update = () => {
     const ns = picked();
-    barText.textContent = ns.length ? `${ns.length} picked: ${listText(ns)}.` : "Tick the findings you want fixed.";
+    barText.textContent = ns.length ? `${ns.length} picked: ${listText(ns)}.` : initialBarText;
     copy.disabled = clear.disabled = !ns.length;
     copy.textContent = "Copy request";
     field.hidden = true;
