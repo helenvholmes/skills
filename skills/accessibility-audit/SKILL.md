@@ -1,6 +1,6 @@
 ---
 name: accessibility-audit
-description: Audit a website against WCAG 2.2 AA the way a careful human tester would — an automated axe scan of every page in every theme and colour scheme, contrast measured for the whole palette including hover and focus states, a real keyboard pass with actual key presses, semantic HTML (the right element for each job: buttons, links, headings, lists, forms), reflow at 320px, the browser's default text size, and reduced motion — then fix contrast with the closest passing colour. Use this whenever the user asks for an accessibility or a11y audit, WCAG or ADA compliance, contrast checks, keyboard or screen reader support, or "is this accessible?", even if they only mention one of those.
+description: Audit a website against WCAG 2.2 AA the way a careful human tester would — an automated axe scan of every page in every theme and colour scheme, contrast measured for the whole palette including hover and focus states, a real keyboard pass with actual key presses, semantic HTML (the right element for each job: buttons, links, headings, lists, forms), pointer target size (24×24 CSS px), reflow at 320px, the browser's default text size, and reduced motion — then fix contrast with the closest passing colour. Use this whenever the user asks for an accessibility or a11y audit, WCAG or ADA compliance, contrast checks, keyboard or screen reader support, tap or click target size, or "is this accessible?", even if they only mention one of those.
 ---
 
 # Accessibility audit
@@ -82,18 +82,33 @@ Each rule, with the concept to name in the finding:
 
 Severity follows who is blocked. A control that keyboard users can't reach, or that's announced as plain text, is **serious**. A fake heading or list, ungrouped choices or a placeholder label is **moderate**. A generic input type or a missing `<time>` is **minor**. In the fix, swap the element and remove what the native one makes redundant (`tabindex="0"`, the role, the keydown handler), and check that the styles still apply: buttons bring their own font, padding, border and background, so reset them.
 
-## 7. Reflow, zoom and text size
+## 7. Target size
+
+The concept is **target size**: the smaller a pointer target, the harder it is to hit, especially with a tremor, a finger, or a mouse held in a cramped hand. The rule is WCAG 2.2 criterion 2.5.8 Target Size (Minimum), AA: every pointer target is at least 24×24 CSS px, or is spaced so that a 24px circle centred on it touches no other target and no other small target's circle. The criterion lets these through:
+
+- **Inline:** a link in a sentence or paragraph, whose size the line height sets.
+- **User agent:** a native control the browser sizes and the author hasn't restyled, like an unstyled checkbox.
+- **Equivalent:** another control on the same page does the same thing and meets the size.
+- **Essential:** the size or position is the information, like a pin on a map.
+
+Run `scripts/target-size.js` on every page, at a desktop width and at a phone width, and again with each menu, dialog and form open. It measures every link, button, field and other control, and lists the ones under 24×24 with their rendered size and a verdict: `fail`, `pass: spacing`, `exception: inline`, or `check: user-agent`. A target under 24 whose real hit area is bigger (padding on a child, or a `::before`/`::after` stretched across it) isn't listed: the script probes a 24×24 square around each small target to find those. For each `check: user-agent`, look at the styles to confirm the author hasn't set its size. For each `fail`, look for an equivalent control or an essential reason before reporting it.
+
+Report each failure as **moderate**, with the target, its size, and what's too close. Make it **serious** when the target is an icon-only control under 16px for something people need to do (closing a dialog, opening the menu) and nothing else on the page does the same job. Small targets that pass by spacing or an exception aren't findings, though crowded inline links (several in one line) are worth a design note.
+
+The smallest fix grows the hit area without changing how the target looks, so a small icon the author chose stays small: `min-width`/`min-height: 24px` on a control whose box can grow, padding with an equal negative margin, or a `::before` with `inset: -4px` (or whatever reaches 24) on a positioned element. Where the targets are fine on their own but crowded, adding `gap` between them is the fix. If the small size is deliberate, report it all the same, say it's a deliberate choice, offer the invisible hit-area fix, and leave the call to the author.
+
+## 8. Reflow, zoom and text size
 
 - **320px wide** (WCAG reflow): nothing scrolls sideways, nothing is cut off.
 - **Text size:** run `scripts/text-size.js`. It simulates a visitor whose browser default text size is 24px instead of 16px, and reports which text scales and which is stuck. Text set in `px` ignores this setting. Page zoom still works, so this isn't a WCAG failure, but it's a real cost for people who set a larger default. Report it, and if the px sizes are deliberate (to match a design), say so and leave the call to the author.
 
-## 8. Reduced motion
+## 9. Reduced motion
 
 Turn on reduced-motion emulation and walk the site. Movement and scaling should stop; opacity fades can stay. Infinite animations should stop. Anything that follows the cursor or reacts to scroll should calm down or stop. `motion-review` covers motion in more depth.
 
 Some browser tools can emulate the colour scheme but not reduced motion. If yours can't, review the CSS (`prefers-reduced-motion` queries) and every script that animates, and say under "Not checked" that reduced motion was reviewed in code, not watched.
 
-## 9. Fixing contrast: the closest passing colour
+## 10. Fixing contrast: the closest passing colour
 
 When a colour fails, don't pick a replacement by eye. Use:
 
@@ -105,7 +120,7 @@ The first colour is the one to change; the rest are every colour it must contras
 
 When you apply a fitted colour, leave a comment next to it with the original value and why it changed.
 
-## 10. Report
+## 11. Report
 
 Use the shape in `../audit/SKILL.md` if you're running as part of an audit; otherwise the same headings: Serious, Moderate, Minor, Already good, Not checked. For contrast, a table of every theme with its ratios beats prose. Always list under "Not checked" what only a person can test: a screen reader (VoiceOver: Cmd+F5 on macOS, triple-click the side button on iPhone), a forced-colours or high-contrast mode, and voice control.
 

@@ -6,7 +6,7 @@ Pre-flight skills for shipping on web: accessibility, motion, layout, unused cod
 |---|---|
 | `audit` | Runs everything below in order and reports once |
 | `layout-check` | Every width from 320px to 2560px with your real content: sideways scrolling, overlap, alignment, widows and orphans, awkward ranges between breakpoints |
-| `accessibility-audit` | WCAG 2.2 AA: axe on every page in every theme, palette contrast including hover and focus, a real keyboard pass, semantic HTML (the right element for each job), reflow, text size, reduced motion. Fixes failing colours with the nearest passing one. |
+| `accessibility-audit` | WCAG 2.2 AA: axe on every page in every theme, palette contrast including hover and focus, a real keyboard pass, semantic HTML (the right element for each job), target size, reflow, text size, reduced motion. Fixes failing colours with the nearest passing one. |
 | `motion-review` | Flicker, motion that makes people wait, reduced-motion support, frame drops, animations running off screen |
 | `prune` | What the project no longer uses: unused pages, components, assets, fonts, exports and packages, code that never runs (found by reading and by coverage), and tests that never run or test code that's gone. Removes only what you pick, with redirects for old pages. |
 | `performance-audit` | Runs `prune` first, then measures what each page downloads and what loads where it shouldn't |
@@ -69,7 +69,7 @@ node skills/accessibility-audit/scripts/contrast.mjs '#c95e46' '#f9f3ef'
 node skills/accessibility-audit/scripts/fit-aa.mjs '#c95e46' '#f9f3ef' '#f9f5ef'
 ```
 
-`axe-sweep.js`, `focus-log.js`, `text-size.js` and `elements.js` (elements doing a job another element was made for, like a clickable `<div>` or a link that's really a button) run inside the page, as does `skills/layout-check/scripts/widows.js`, which lists headings and paragraphs whose last line is a single word; each explains its use at the top.
+`axe-sweep.js`, `focus-log.js`, `text-size.js`, `elements.js` (elements doing a job another element was made for, like a clickable `<div>` or a link that's really a button) and `target-size.js` (pointer targets under 24×24 CSS px, and whether spacing or an exception saves them) run inside the page, as does `skills/layout-check/scripts/widows.js`, which lists headings and paragraphs whose last line is a single word; each explains its use at the top.
 
 ## License
 
