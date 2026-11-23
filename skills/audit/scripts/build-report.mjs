@@ -66,6 +66,10 @@ need(Array.isArray(data.findings), "findings: must be a list (it can be empty)")
     need(typeof img.alt === "string" && img.alt, `${at}.${key}.alt is required: describe what the crop shows`);
   }
   if (f.after !== undefined) need(f.image, `${at}.after needs an image to compare against: the screenshot from before the fix`);
+  if (f.wontFix !== undefined) {
+    need(f.wontFix === true || (typeof f.wontFix === "string" && f.wontFix), `${at}.wontFix must be true or the reason, as text`);
+    need(f.after === undefined, `${at} can't be both fixed (after) and wontFix`);
+  }
   if (f.table) {
     need(Array.isArray(f.table.columns) && Array.isArray(f.table.rows), `${at}.table needs columns and rows`);
     (f.table.rows || []).forEach((r, j) =>
@@ -106,9 +110,11 @@ if (standalone) {
 }
 writeFileSync(output, page);
 
-// Fixed findings (those with an after screenshot) are counted on their own.
-const open = data.findings.filter((f) => !f.after);
-const fixedCount = data.findings.length - open.length;
+// Fixed findings (those with an after screenshot) and won't-fix ones are
+// counted on their own.
+const open = data.findings.filter((f) => !f.after && !f.wontFix);
+const fixedCount = data.findings.filter((f) => f.after).length;
+const wontFixCount = data.findings.filter((f) => f.wontFix).length;
 const tally = (list, key) =>
   list.map((v) => [v, open.filter((f) => f[key] === v).length]).filter(([, n]) => n).map(([v, n]) => `${n} ${v}`);
 const findings = open.filter((f) => f.area !== "Design").length;
@@ -117,4 +123,5 @@ const parts = [];
 if (findings || !suggestions) parts.push(`${findings} open findings${findings ? ` (${tally(SEVERITIES, "severity").join(", ")})` : ""}`);
 if (suggestions) parts.push(`${suggestions} open suggestions (${tally(WEIGHTS, "weight").join(", ")})`);
 if (fixedCount) parts.push(`${fixedCount} fixed`);
+if (wontFixCount) parts.push(`${wontFixCount} won't fix`);
 console.log(`Wrote ${output}: ${parts.join(", ")}.`);
