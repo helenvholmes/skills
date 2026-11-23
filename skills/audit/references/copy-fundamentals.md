@@ -88,9 +88,13 @@ Source: Kathy Sierra, [*Badass: Making Users Awesome*](https://www.oreilly.com/l
 
 ## Punctuation set properly
 
-Small marks the reader never notices when they're right, and notices as sloppiness when they're wrong. Check them in the rendered page, not only the source, since fonts and CSS change how they sit.
+How the marks are set (dashes, curly quotes and apostrophes, real symbols, non-breaking spaces, hanging punctuation) is checked by `typesetting`, under "Marks" in `../../typesetting/references/rules.md`, because those have a right answer and `audit` runs that check on every site. A copy review that notices a wrong mark names it and points there.
 
-- **Em dashes close up.** An em dash in a sentence touches the words on both sides, with no spaces: "the result—not the tool". Lenses: spaced em dashes ("the result — not the tool"); a hyphen or a double hyphen standing in for a dash ("the result - not the tool", "the result--not the tool"). Ranges take an en dash, also unspaced ("2019–2024").
-- **Hanging punctuation.** Opening quotation marks, bullets and similar marks sit in the margin, so the letters line up with the text edge and the left edge reads as straight. Lenses: a pull quote or blockquote whose first line looks indented by its opening quote mark; list bullets that push the text in so it no longer lines up with the paragraphs around it. Fix with `hanging-punctuation: first` where the browser supports it (only Safari, as of writing), and a negative `text-indent` the width of the mark (about `-0.4em` for a curly quote; check it at the actual font) on elements that always start with one.
+## Consistent style
 
-Sources: [*The Chicago Manual of Style*](https://www.chicagomanualofstyle.org/) on dashes; Robert Bringhurst, [*The Elements of Typographic Style*](https://en.wikipedia.org/wiki/The_Elements_of_Typographic_Style), on hanging punctuation.
+Some choices have more than one right answer. Picking one and holding to it is what matters, because a reader notices the switch between them as carelessness even when both are correct.
+
+- **One capitalisation style for headings.** Title case ("Plans and Pricing") or sentence case ("Plans and pricing"), used everywhere: page headings, nav, buttons, labels. Lenses: a nav mixing "About Us" with "Get in touch"; buttons in one style and headings in the other. Sentence case reads more easily and suits most interfaces; whichever the author picked, the finding is the inconsistency, not the choice.
+- **Numbers styled one way.** Chicago spells out whole numbers up to one hundred in running text, but on the web numerals usually read faster and scan better ("3 steps", not "three steps"). Lenses: "5 minutes" in one place and "five minutes" in another; numerals and words mixed in the same list. The finding is the inconsistency, not which rule was chosen.
+
+Source: [*The Chicago Manual of Style*](https://www.chicagomanualofstyle.org/) on capitalisation and numbers.

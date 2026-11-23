@@ -1,11 +1,13 @@
 ---
 name: design-critique
-description: "Critique the visual and interaction design of a website's rendered pages — hierarchy, spacing, type, grids, colour, details and restraint — against the author's own taste first, then Dieter Rams, Gestalt grouping, Don Norman, Bringhurst, Müller-Brockmann, optical adjustments, Albers and Tufte, and return weighted suggestions (not failures) in the audit report, then apply only the ones the author picks. Use this whenever someone asks for a design critique, design review or design feedback on a site or page, asks \"does this look good?\", \"what would a designer change?\" or \"why does this feel off?\", or wants a visual polish pass before shipping."
+description: "Critique the visual and interaction design of a website's rendered pages — hierarchy, spacing, type, grids, colour, details and restraint — against the author's own taste first, then Dieter Rams, Gestalt grouping, Don Norman, Bringhurst, Müller-Brockmann, optical adjustments, Albers and Tufte (running `typesetting` for how the type is set), and return weighted suggestions (not failures) in the audit report, then apply only the ones the author picks. Use this whenever someone asks for a design critique, design review or design feedback on a site or page, asks \"does this look good?\", \"what would a designer change?\" or \"why does this feel off?\", or wants a visual polish pass before shipping."
 ---
 
 # Design critique
 
 Look at a site the way a careful designer would, and suggest the few changes that would make it better. A critique gives **suggestions**, not failures: nothing here is broken, and the author is free to turn every one down. Problems that fail someone (contrast below AA, overflow, flicker) belong to `accessibility-audit`, `layout-check` and `motion-review`; when you notice one, name it and point there.
+
+How type is *set* (measure, leading, letter-spacing, figures, faked styles, justification, quotes and dashes) mostly has a right answer, so it belongs to `typesetting`, a check of its own. On its own, a critique runs `typesetting` first, following that skill's instructions, and adds its findings to the report as problems, ahead of the suggestions. Inside `audit`, `typesetting` has already run, so don't run it again. Either way, the critique's own typography lenses are only the ones left in `design-fundamentals.md`: the scale and restraint.
 
 ## Order of authority
 

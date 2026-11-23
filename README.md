@@ -1,6 +1,6 @@
 # skills
 
-Pre-flight skills for shipping on web: accessibility, motion, layout, unused code, performance and security for sites, and case study and visual design/ux design review for pages. One command, `audit`, runs all of them and returns a single report ranked by severity, then fixes only what you approve. Heavily borrows from others' skills such as [poteto](https://github.com/poteto/how) and [emil](https://github.com/emilkowalski/skills) albeit with my own flavor.
+Pre-flight skills for shipping on web: accessibility, motion, layout, typesetting, unused code, performance and security for sites, and case study and visual design/ux design review for pages. One command, `audit`, runs all of them and returns a single report ranked by severity, then fixes only what you approve. Heavily borrows from others' skills such as [poteto](https://github.com/poteto/how) and [emil](https://github.com/emilkowalski/skills) albeit with my own flavor.
 
 | Skill | What it checks |
 |---|---|
@@ -8,6 +8,7 @@ Pre-flight skills for shipping on web: accessibility, motion, layout, unused cod
 | `layout-check` | Every width from 320px to 2560px with your real content: sideways scrolling, overlap, alignment, widows and orphans, awkward ranges between breakpoints |
 | `accessibility-audit` | WCAG 2.2 AA: axe on every page in every theme, palette contrast including hover and focus, a real keyboard pass, semantic HTML (the right element for each job), target size, reflow, text size, reduced motion. Fixes failing colours with the nearest passing one. |
 | `motion-review` | Flicker, motion that makes people wait, reduced-motion support, frame drops, animations running off screen |
+| `typesetting` | How the type is set, after Bringhurst and the Chicago Manual of Style: line length and leading, letter-spacing on capitals, tabular figures, faked bold or italic, justification without hyphenation, paragraph indents, kerning and ligatures, and the marks (curly quotes and apostrophes, dashes, ×, −, …, non-breaking spaces, hanging punctuation). The rules are in [`skills/typesetting/references/rules.md`](skills/typesetting/references/rules.md). |
 | `prune` | What the project no longer uses: unused pages, components, assets, fonts, exports and packages, code that never runs (found by reading and by coverage), and tests that never run or test code that's gone. Removes only what you pick, with redirects for old pages. |
 | `performance-audit` | Runs `prune` first, then measures what each page downloads and what loads where it shouldn't |
 | `security-audit` | Production dependency advisories, lockfile drift and whether the lockfile installs cleanly on your host, unused risky features, headers and CSP, secrets, private pages |
@@ -88,7 +89,7 @@ node skills/social-preview/scripts/check-preview.mjs https://example.com/
 node skills/social-preview/scripts/preview-crops.mjs og-image.png crops.html
 ```
 
-`axe-sweep.js`, `focus-log.js`, `text-size.js`, `elements.js` (elements doing a job another element was made for, like a clickable `<div>` or a link that's really a button) and `target-size.js` (pointer targets under 24×24 CSS px, and whether spacing or an exception saves them) run inside the page, as does `skills/layout-check/scripts/widows.js`, which lists headings and paragraphs whose last line is a single word; each explains its use at the top.
+`axe-sweep.js`, `focus-log.js`, `text-size.js`, `elements.js` (elements doing a job another element was made for, like a clickable `<div>` or a link that's really a button) and `target-size.js` (pointer targets under 24×24 CSS px, and whether spacing or an exception saves them) run inside the page, as do `skills/layout-check/scripts/widows.js`, which lists headings and paragraphs whose last line is a single word, and `skills/typesetting/scripts/typesetting.js`, which measures how the type is set against the typesetting rules; each explains its use at the top.
 
 ## License
 

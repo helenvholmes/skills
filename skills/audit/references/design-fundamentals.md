@@ -51,14 +51,10 @@ Sources: Don Norman, [*The Design of Everyday Things*](https://en.wikipedia.org/
 
 ## Typography
 
-After Robert Bringhurst, [*The Elements of Typographic Style*](https://en.wikipedia.org/wiki/The_Elements_of_Typographic_Style). Type exists to honour the content, and most of its quality is in rhythm and proportion:
+After Robert Bringhurst, [*The Elements of Typographic Style*](https://en.wikipedia.org/wiki/The_Elements_of_Typographic_Style). Type exists to honour the content. How type is *set* (measure, leading, letter-spacing, figures, faked styles, justification, marks) mostly has a right answer, so the `typesetting` check owns it, with its rules in `../../typesetting/references/rules.md`. What's left here is the part that's taste:
 
-- **Measure.** Comfortable reading lines run about 45–75 characters, around 66 for a single column. Lenses: body text that runs the full width of a wide screen, or squeezes under about 40 characters.
-- **Leading.** Line spacing grows with line length and shrinks as type gets bigger. Lenses: headings set at body line-height (too loose), long lines set tight.
 - **A scale.** Sizes come from a consistent ratio, with enough contrast between steps to read as different. Lenses: sizes a pixel or two apart, more sizes than the hierarchy has levels.
 - **Restraint.** A few typefaces and weights, each with a job. Lenses: a third family with no clear role, a weight used once.
-- **Small text and capitals.** Letter-spacing opens up for capitals and small sizes, and closes for large display sizes. Lenses: tracked-out lowercase, tight all-caps labels.
-- **Hanging punctuation.** Covered in `copy-fundamentals.md`, under "Punctuation set properly".
 
 ## Grids
 
