@@ -6,10 +6,10 @@ Pre-flight skills for shipping on web: accessibility, motion, layout, performanc
 |---|---|
 | `audit` | Runs everything below in order and reports once |
 | `layout-check` | Every width from 320px to 2560px with your real content: sideways scrolling, overlap, alignment, widows and orphans, awkward ranges between breakpoints |
-| `accessibility-audit` | WCAG 2.2 AA: axe on every page in every theme, palette contrast including hover and focus, a real keyboard pass, reflow, text size, reduced motion. Fixes failing colours with the nearest passing one. |
+| `accessibility-audit` | WCAG 2.2 AA: axe on every page in every theme, palette contrast including hover and focus, a real keyboard pass, semantic HTML (the right element for each job), reflow, text size, reduced motion. Fixes failing colours with the nearest passing one. |
 | `motion-review` | Flicker, motion that makes people wait, reduced-motion support, frame drops, animations running off screen |
 | `performance-audit` | Prunes unused pages, fonts, assets and packages, then measures what each page downloads and what loads where it shouldn't |
-| `security-audit` | Production dependency advisories, lockfile drift, unused risky features, headers and CSP, secrets, private pages |
+| `security-audit` | Production dependency advisories, lockfile drift and whether the lockfile installs cleanly on your host, unused risky features, headers and CSP, secrets, private pages |
 | Basics sweep | Part of `audit`, not a skill of its own: small things every page needs, starting with a favicon that loads and reads at tab size |
 
 And one for portfolios:
@@ -19,6 +19,8 @@ And one for portfolios:
 | `review` | Reviews the case studies on a portfolio the way a hiring manager or client reads them, using Brian Lovin's [advice on presenting design work](https://brianlovin.com/writing/how-to-give-a-great-product-design-portfolio-presentation): context, the problem before the solution, constraints, what you tried, outcomes, and credit. Suggests the few changes that matter most and makes only the ones you pick. |
 
 The report opens as a page: findings grouped by severity, real colour swatches for every contrast problem, filters by check, and a box on each finding to tick what you want fixed and copy the request back to Claude. In Claude it's published as a private Artifact; elsewhere it opens in your browser. The skill writes the findings as data (`skills/audit/references/report-format.md`) and `skills/audit/scripts/build-report.mjs` builds the page, so every report has the same shape.
+
+Every finding names the concept it breaks and the rule that fixes it ("Concentric radii: inner radius equals outer radius minus the padding"), not just the symptom, so the fix follows from the rule. Anything you can see on the page comes with a cropped screenshot. Once you've approved and Claude has fixed it, an after shot taken at the same width, theme and state sits beside it, the finding moves to a Fixed group, and the report republishes to the same page.
 
 ## The opinions
 
@@ -38,6 +40,12 @@ In Claude Code:
 ```
 
 Then ask for an audit in plain words ("audit this site before I ship it"), or call a skill directly, for example `/helenvholmes:audit` or `/helenvholmes:accessibility-audit`.
+
+To run every skill at once, paste this into Claude:
+
+```
+Run every helenvholmes skill on this site. First /helenvholmes:audit, which covers layout, accessibility, motion, performance, security and the basics sweep. Then, if the site has portfolio case studies, /helenvholmes:review on each one. Give me the audit report and the review, and don't change anything until I pick what to fix.
+```
 
 Or copy any folder from `skills/` into `~/.claude/skills/` to use it on its own, without the `helenvholmes:` prefix. Each check skill reads `../audit/references/principles.md` if it's there, so copy `audit` along with it to keep the opinions.
 
@@ -59,7 +67,7 @@ node skills/accessibility-audit/scripts/contrast.mjs '#c95e46' '#f9f3ef'
 node skills/accessibility-audit/scripts/fit-aa.mjs '#c95e46' '#f9f3ef' '#f9f5ef'
 ```
 
-`axe-sweep.js`, `focus-log.js` and `text-size.js` run inside the page; each explains its use at the top.
+`axe-sweep.js`, `focus-log.js`, `text-size.js` and `elements.js` (elements doing a job another element was made for, like a clickable `<div>` or a link that's really a button) run inside the page, as does `skills/layout-check/scripts/widows.js`, which lists headings and paragraphs whose last line is a single word; each explains its use at the top.
 
 ## License
 
