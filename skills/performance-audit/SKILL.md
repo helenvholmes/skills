@@ -1,22 +1,15 @@
 ---
 name: performance-audit
-description: Make a website as fast as it can be — first prune the pages, fonts, assets, components and packages it no longer uses, then measure exactly what each page downloads (gzipped JavaScript, CSS, fonts, images), find what loads everywhere that shouldn't, and say plainly when the framework itself is the floor and a different stack would be lighter. Use this whenever the user asks about speed, performance, page weight, bundle size, Lighthouse or Core Web Vitals, "why is this slow", or whether to change frameworks.
+description: Make a website as fast as it can be — first prune what it no longer uses, then measure exactly what each page downloads (gzipped JavaScript, CSS, fonts, images), find what loads everywhere that shouldn't, and say plainly when the framework itself is the floor and a different stack would be lighter. Use this whenever the user asks about speed, performance, page weight, bundle size, Lighthouse or Core Web Vitals, "why is this slow", or whether to change frameworks.
 ---
 
 # Performance audit
 
 Most sites that feel heavy are carrying things they no longer use. Measuring before pruning gives misleading numbers and fixes in the wrong order, so this audit prunes first. Read `../audit/references/principles.md` first if it's there.
 
-## 1. Find what's unused
+## 1. Prune first
 
-Start from what visitors can reach, not from what's in the repo:
-
-- **Pages:** which routes are linked from the current site? Old pages that nothing links to still build, ship, and sit in the sitemap. List them.
-- **Fonts:** which font families does the current design use? Check what's loaded and preloaded on each page against that. Preloading fonts a page doesn't use is common and costly.
-- **Assets:** images, videos and files in the public folder that no current page references.
-- **Components and packages:** components only used by unreachable pages, and dependencies only those components import.
-
-Present the list and ask before deleting. Removing a page means deciding where its URL goes: a permanent redirect to an archived copy, to the nearest current page, or a 404. Check every redirect destination actually returns a page.
+Run the `prune` skill (`../prune/SKILL.md`) before measuring, and measure only after the user has decided what to remove. Its unused pages, assets, fonts and packages change what ships; its dead-code and dead-test findings don't change page weight, so if the user only wants speed, those can wait. Inside `audit`, prune has already run as its own check: use its results and go straight to measuring.
 
 ## 2. Measure each page
 

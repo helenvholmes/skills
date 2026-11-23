@@ -1,6 +1,6 @@
 # skills
 
-Pre-flight skills for shipping on web: accessibility, motion, layout, performance and security for sites, and case study and visual design/ux design review for pages. One command, `audit`, runs all of them and returns a single report ranked by severity, then fixes only what you approve. Heavily borrows from others' skills such as [poteto](https://github.com/poteto/how) and [emil](https://github.com/emilkowalski/skills) albeit with my own flavor.
+Pre-flight skills for shipping on web: accessibility, motion, layout, unused code, performance and security for sites, and case study and visual design/ux design review for pages. One command, `audit`, runs all of them and returns a single report ranked by severity, then fixes only what you approve. Heavily borrows from others' skills such as [poteto](https://github.com/poteto/how) and [emil](https://github.com/emilkowalski/skills) albeit with my own flavor.
 
 | Skill | What it checks |
 |---|---|
@@ -8,7 +8,8 @@ Pre-flight skills for shipping on web: accessibility, motion, layout, performanc
 | `layout-check` | Every width from 320px to 2560px with your real content: sideways scrolling, overlap, alignment, widows and orphans, awkward ranges between breakpoints |
 | `accessibility-audit` | WCAG 2.2 AA: axe on every page in every theme, palette contrast including hover and focus, a real keyboard pass, semantic HTML (the right element for each job), reflow, text size, reduced motion. Fixes failing colours with the nearest passing one. |
 | `motion-review` | Flicker, motion that makes people wait, reduced-motion support, frame drops, animations running off screen |
-| `performance-audit` | Prunes unused pages, fonts, assets and packages, then measures what each page downloads and what loads where it shouldn't |
+| `prune` | What the project no longer uses: unused pages, components, assets, fonts, exports and packages, code that never runs (found by reading and by coverage), and tests that never run or test code that's gone. Removes only what you pick, with redirects for old pages. |
+| `performance-audit` | Runs `prune` first, then measures what each page downloads and what loads where it shouldn't |
 | `security-audit` | Production dependency advisories, lockfile drift and whether the lockfile installs cleanly on your host, unused risky features, headers and CSP, secrets, private pages |
 | Basics sweep | Part of `audit`, not a skill of its own: small things every page needs, starting with a favicon that loads and reads at tab size |
 
@@ -45,7 +46,7 @@ Then ask for an audit in plain words ("audit this site before I ship it"), or ca
 To run every skill at once, paste this into Claude:
 
 ```
-Run every helenvholmes skill on this site. First /helenvholmes:audit, which covers layout, accessibility, motion, performance, security and the basics sweep. Then, if the site has portfolio case studies, /helenvholmes:review on each one. Give me the audit report and the review, and don't change anything until I pick what to fix.
+Run every helenvholmes skill on this site. First /helenvholmes:audit, which covers layout, accessibility, motion, unused code, performance, security and the basics sweep. Then, if the site has portfolio case studies, /helenvholmes:review on each one. Give me the audit report and the review, and don't change anything until I pick what to fix.
 ```
 
 Or copy any folder from `skills/` into `~/.claude/skills/` to use it on its own, without the `helenvholmes:` prefix. Each check skill reads `../audit/references/principles.md` if it's there, so copy `audit` along with it to keep the opinions.

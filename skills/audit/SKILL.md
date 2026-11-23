@@ -1,6 +1,6 @@
 ---
 name: audit
-description: Run every pre-ship check on a website or web app — accessibility, motion, layout across breakpoints, performance and security — and return one report ranked by severity, then fix only what the user approves. Use this whenever the user asks to audit, QA, review, check, or "go over" a site before shipping or after a big change (a redesign, a stack migration, a new page), asks "did we miss anything?", or wants to re-run the audits they ran before. Prefer it over running the individual check skills one by one when the request covers more than one area.
+description: Run every pre-ship check on a website or web app — accessibility, motion, layout across breakpoints, unused code, performance and security — and return one report ranked by severity, then fix only what the user approves. Use this whenever the user asks to audit, QA, review, check, or "go over" a site before shipping or after a big change (a redesign, a stack migration, a new page), asks "did we miss anything?", or wants to re-run the audits they ran before. Prefer it over running the individual check skills one by one when the request covers more than one area.
 ---
 
 # Audit
@@ -12,7 +12,8 @@ One command that runs all the checks this plugin has and reports back once. The 
 | `layout-check` | Every width from 320px to 2560px with the real content: no sideways scroll, nothing overlapping, columns that line up |
 | `accessibility-audit` | WCAG 2.2 AA: automated scan of every page in every theme, palette contrast, a real keyboard pass, semantic HTML, reflow, text size, reduced motion |
 | `motion-review` | Whether each animation has a reason, works with reduced motion, doesn't flicker, and never makes someone wait |
-| `performance-audit` | Pruning what's unused, then measuring what each page downloads and what's loaded that shouldn't be |
+| `prune` | Unused pages, components, assets, fonts, exports and packages, code that never runs, and tests that never run or test code that's gone |
+| `performance-audit` | Measuring what each page downloads, once pruned, and what's loaded that shouldn't be |
 | `security-audit` | Dependency advisories, lockfile drift, headers and CSP, secrets, private pages |
 
 Before starting, read `references/principles.md`. It describes how this author wants audits done, and it overrides generic best practice wherever they disagree. The single most important rule: decisions the author made on purpose are not findings.
@@ -29,13 +30,14 @@ Spend a few minutes learning the site before testing it. You need to know:
 
 ## 2. Run the checks
 
-Run each check skill in this order, following its own instructions. Layout comes first because overflow and broken breakpoints distort every later measurement; security comes last because it barely needs the browser.
+Run each check skill in this order, following its own instructions. Layout comes first because overflow and broken breakpoints distort every later measurement; prune comes before performance because unused files and packages distort its numbers; security comes last because it barely needs the browser.
 
 1. `layout-check`
 2. `accessibility-audit`
 3. `motion-review`
-4. `performance-audit`
-5. `security-audit`
+4. `prune`
+5. `performance-audit`
+6. `security-audit`
 
 Skip a check only when it truly can't apply (no motion at all on the site, say), and say in the report that you skipped it and why.
 
@@ -90,4 +92,4 @@ Don't fix anything until the user says which findings to act on. The report page
 
 ## When the request is narrower
 
-If the user asks for one area ("just check accessibility"), run that one skill directly; this skill is for "check everything". If they ask to re-run audits after a change, re-run all five checks and the basics sweep, and compare against the earlier findings: what's fixed, what's new, what's still open.
+If the user asks for one area ("just check accessibility"), run that one skill directly; this skill is for "check everything". If they ask to re-run audits after a change, re-run all six checks and the basics sweep, and compare against the earlier findings: what's fixed, what's new, what's still open.
