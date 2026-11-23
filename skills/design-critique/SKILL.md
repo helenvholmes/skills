@@ -1,6 +1,6 @@
 ---
 name: design-critique
-description: "Critique the visual and interaction design of a website's rendered pages — hierarchy, spacing, type, grids, colour, details and restraint — against the author's own taste first, then Dieter Rams, Gestalt grouping, Bringhurst, Müller-Brockmann, Albers and Tufte, and return weighted suggestions (not failures) in the audit report, then apply only the ones the author picks. Use this whenever someone asks for a design critique, design review or design feedback on a site or page, asks \"does this look good?\", \"what would a designer change?\" or \"why does this feel off?\", or wants a visual polish pass before shipping."
+description: "Critique the visual and interaction design of a website's rendered pages — hierarchy, spacing, type, grids, colour, details and restraint — against the author's own taste first, then Dieter Rams, Gestalt grouping, Don Norman, Bringhurst, Müller-Brockmann, optical adjustments, Albers and Tufte, and return weighted suggestions (not failures) in the audit report, then apply only the ones the author picks. Use this whenever someone asks for a design critique, design review or design feedback on a site or page, asks \"does this look good?\", \"what would a designer change?\" or \"why does this feel off?\", or wants a visual polish pass before shipping."
 ---
 
 # Design critique
@@ -28,10 +28,10 @@ Take a cropped screenshot of anything you might suggest changing, noting its wid
 
 Read each page against every rule in `design-taste.md`, then against every section of `design-fundamentals.md` (Data and charts only where the page has data). The critique is done when every page has been read against every rule and every section, not when you've found a few things to say.
 
-A suggestion needs all of these, or it's a preference and gets dropped:
+A suggestion follows "A finding needs evidence and a name" in `principles.md`, and needs all of these, or it's a preference and gets dropped:
 
 - **Evidence** from the page: the crop, plus a measured number where there is one (line length in characters, the spacing values that don't match, the radii, the count of type sizes). Measure in the browser rather than estimating from a screenshot.
-- **A basis**: where it comes from, as a short tag. `Your taste` for a rule from `design-taste.md`; the fundamental in the form `Rams: as little design as possible`, `Gestalt: proximity` or `Bringhurst: measure`; or a named piece of general advice in the same form, such as `Optical: concentric radii`. Use `General advice` only when the advice has no name.
+- **A basis**: where it comes from, as a short tag. `Your taste` for a rule from `design-taste.md`; the fundamental in the form `Rams: as little design as possible`, `Norman: feedback` or `Optical: concentric radii`; or a named piece of general advice in the same form. Use `General advice` only when the advice has no name.
 - **A concept and its rule**, specific enough that the change follows from it: `Concentric radii`, "Inner radius equals outer radius minus the padding between them". For a taste suggestion, the rule is the line from `design-taste.md`, quoted.
 - **The smallest change** that follows the rule, kept within the author's existing system: their spacing scale, their palette, their type sizes. A critique sharpens the design that's there; it doesn't propose a new one.
 
