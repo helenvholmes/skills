@@ -11,6 +11,7 @@ Pre-flight skills for shipping on web: accessibility, motion, layout, unused cod
 | `prune` | What the project no longer uses: unused pages, components, assets, fonts, exports and packages, code that never runs (found by reading and by coverage), and tests that never run or test code that's gone. Removes only what you pick, with redirects for old pages. |
 | `performance-audit` | Runs `prune` first, then measures what each page downloads and what loads where it shouldn't |
 | `security-audit` | Production dependency advisories, lockfile drift and whether the lockfile installs cleanly on your host, unused risky features, headers and CSP, secrets, private pages |
+| `design-critique` | Suggestions rather than failures: hierarchy, spacing, type, grids, colour and detail on the rendered pages, judged by your own taste in [`design-taste.md`](skills/audit/references/design-taste.md) first, then Rams, Gestalt, Bringhurst, Müller-Brockmann, Albers and Tufte ([`design-fundamentals.md`](skills/audit/references/design-fundamentals.md)). Each suggestion is weighted heavy, medium or light and names its basis. Runs last in `audit`, or on its own as a design critique. |
 | Basics sweep | Part of `audit`, not a skill of its own: small things every page needs, starting with a favicon that loads and reads at tab size |
 
 And two for what a site says:
@@ -30,7 +31,9 @@ These skills come from auditing real projects, and they encode how I want my wor
 
 The rest are in [`skills/audit/references/principles.md`](skills/audit/references/principles.md): test with the real content rather than invented worst cases, keep a row's text still on hover, treat reduced motion as gentler rather than none, prune before measuring, and make every fix separately so it can be undone.
 
-If your opinions differ, fork it and edit that file.
+Design taste lives in its own file, [`skills/audit/references/design-taste.md`](skills/audit/references/design-taste.md), which starts empty and grows: when you turn down a design suggestion with a reason, `design-critique` offers to add it as a rule, and the next critique won't raise it again.
+
+If your opinions differ, fork it and edit those files.
 
 ## Install
 
@@ -46,7 +49,7 @@ Then ask for an audit in plain words ("audit this site before I ship it"), or ca
 To run every skill at once, paste this into Claude:
 
 ```
-Run every helenvholmes skill on this site. First /helenvholmes:audit, which covers layout, accessibility, motion, unused code, performance, security and the basics sweep. Then, if the site has portfolio case studies, /helenvholmes:review on each one. Give me the audit report and the review, and don't change anything until I pick what to fix.
+Run every helenvholmes skill on this site. First /helenvholmes:audit, which covers layout, accessibility, motion, unused code, performance, security, the basics sweep and a design critique. Then, if the site has portfolio case studies, /helenvholmes:review on each one. Give me the audit report and the review, and don't change anything until I pick what to fix.
 ```
 
 Or copy any folder from `skills/` into `~/.claude/skills/` to use it on its own, without the `helenvholmes:` prefix. Each check skill reads `../audit/references/principles.md` if it's there, so copy `audit` along with it to keep the opinions.
