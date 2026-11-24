@@ -82,6 +82,7 @@ After Josef Albers, [*Interaction of Color*](https://yalebooks.yale.edu/book/978
 - **Quantity.** How much of a colour is used changes what it means. Lenses: an accent used so often it stops signalling anything.
 - **Value before hue.** Hierarchy comes mostly from lightness contrast. Lenses: two elements different in hue but equal in value, so neither leads.
 - **Both themes.** In dark mode, colours need re-balancing, not just inverting. Lenses: saturated colours that glow on dark backgrounds, shadows that vanish.
+- **Every state, including selection.** A colour has to work wherever it lands, and selected text is a place too. Lenses: a custom selection colour that clashes with the accent or only suits one theme, a highlight that turns a code block or inverted section muddy. If selected text becomes hard to read, that's a failure for `accessibility-audit`, not a suggestion.
 
 ## Data and charts
 
