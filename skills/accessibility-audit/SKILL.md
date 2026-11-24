@@ -1,6 +1,6 @@
 ---
 name: accessibility-audit
-description: Audit a website against WCAG 2.2 AA the way a careful human tester would — an automated axe scan of every page in every theme and colour scheme, contrast measured for the whole palette including hover and focus states, a real keyboard pass with actual key presses, semantic HTML (the right element for each job: buttons, links, headings, lists, forms), pointer target size (24×24 CSS px), reflow at 320px, the browser's default text size, and reduced motion — then fix contrast with the closest passing colour. Use this whenever the user asks for an accessibility or a11y audit, WCAG or ADA compliance, contrast checks, keyboard or screen reader support, tap or click target size, or "is this accessible?", even if they only mention one of those.
+description: Audit a website against WCAG 2.2 AA the way a careful human tester would — an automated axe scan of every page in every theme and colour scheme, contrast measured for the whole palette including hover and focus states and selected or highlighted text, a real keyboard pass with actual key presses, semantic HTML (the right element for each job: buttons, links, headings, lists, forms), pointer target size (24×24 CSS px), reflow at 320px, the browser's default text size, and reduced motion — then fix contrast with the closest passing colour. Use this whenever the user asks for an accessibility or a11y audit, WCAG or ADA compliance, contrast checks, selection or highlight colours, keyboard or screen reader support, tap or click target size, or "is this accessible?", even if they only mention one of those.
 ---
 
 # Accessibility audit
@@ -13,7 +13,7 @@ The scripts referred to below are in `scripts/`. Run the `.mjs` ones with Node. 
 
 - Every page, including the 404 page, and any page reachable only by URL.
 - Every theme × colour scheme. If the site picks a theme per visit or at random, find the mechanism (often `localStorage` or a `data-` attribute on `<html>`) so you can force each one. A site that moves to the next theme on every load needs the stored value set to the one *before* the theme you want.
-- Each state with different colours: default, hover, focus, active, visited, disabled, selected text.
+- Each state with different colours: default, hover, focus, active, visited, disabled, selected text (`::selection`), and other highlights (`<mark>`, search results, `::target-text`).
 
 ## 2. Automated scan, every combination
 
@@ -36,6 +36,25 @@ node scripts/contrast.mjs '#c95e46' '#f9f3ef'  '#f9f5ef' '#8e3a27'
 It takes pairs (foreground, background) and prints each ratio with pass or fail for normal text (4.5:1), large text (3:1) and AAA. Remember the non-text pairs too: a focus indicator needs 3:1 against what's next to it, and a hover or focus *fill* that's the only sign of focus needs 3:1 against the unfocused background. That last one is easy to miss in dark themes, where a dark brand colour on a dark page can drop to 1.4:1.
 
 Very small text (under about 10px) can pass contrast and still be hard to read. Report it as a design note, not a failure.
+
+### Selected and highlighted text
+
+People select text to copy it, to keep their place, and to have it read aloud, so text has to stay readable while it's selected. The browser's own selection colours work on any page; a site's `::selection` rule replaces them, and that's where it breaks. The usual ways:
+
+- **A background with no text colour.** `::selection { background: var(--brand) }` leaves every element its own colour, so links and accents in the brand colour vanish (1:1) and body text can drop below 4.5:1.
+- **One theme's highlight in every theme.** A highlight picked for the light theme, left in place for the dark one, under light text.
+- **A translucent highlight** that washes text out once it's blended with the page.
+- **One highlight for the whole page** that doesn't suit the dark code block, the inverted footer or the coloured card inside it.
+- **Gradient text** (`background-clip: text` with a transparent fill), which often turns into a solid box or vanishes when selected.
+- **`user-select: none` on prose**, so it can't be selected, copied or read from a selection at all.
+
+The same applies to the other highlights an author styles: `::target-text` (the passage a `#:~:text=` link scrolls to), `::highlight()` (often search results), and `<mark>`.
+
+Run `scripts/selection.js` on every page, in every theme and colour scheme. It lists the site's highlight rules, then each distinct selected-text-on-highlight pair with its ratio, worst first (a translucent highlight blended with what's under it), the same for `<mark>`, prose that can't be selected, and leads for what a number can't settle: highlights over an image or gradient, gradient text, and rules that set a background but no colour. If it finds no `::selection` rule, the browser's colours apply: check only the gradient text and `user-select` leads.
+
+Then look. Select the text for real, by dragging, triple-clicking a paragraph, or `getSelection().selectAllChildren(document.querySelector("main"))`, and screenshot it in each theme, especially links, code blocks, inverted sections and anything the script listed. A selection painted grey means the tab isn't focused; that's the browser's inactive colour, not the site's.
+
+Selected text uses the same thresholds as any text: 4.5:1, or 3:1 for large text. Report a failing pair as **moderate**, or **serious** when the text disappears (under about 1.5:1) or prose can't be selected. WCAG's 1.4.3 is usually read as not covering the browser's default highlight; an author's own highlight colours are theirs, so report them on the measured ratio. The fix is usually one line: give the `::selection` rule a `color` as well as a `background`, check the pair with `contrast.mjs`, and redefine it wherever the theme or section background changes.
 
 ## 4. A real keyboard pass
 
