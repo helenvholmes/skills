@@ -1,6 +1,6 @@
 ---
 name: prune
-description: Find and remove what a project no longer uses — unused pages, components, assets and fonts, unused exports, unused dependencies, and code that never runs: branches that can't be reached, conditionals that always go one way, finished feature flags, and tests that never run or test code that's gone. Each candidate comes with its evidence, and nothing is deleted until the user picks it. Use this whenever the user asks to clean up a project, find dead or unused code, files or packages, asks "what can I delete?", mentions knip, depcheck or coverage gaps, or before measuring performance.
+description: "Find and remove what a project no longer uses — unused pages, components, assets and fonts, unused exports, unused dependencies, and code that never runs: branches that can't be reached, conditionals that always go one way, finished feature flags, and tests that never run or test code that's gone. Each candidate comes with its evidence, and nothing is deleted until the user picks it. Use this whenever the user asks to clean up a project, find dead or unused code, files or packages, asks \"what can I delete?\", mentions knip, depcheck or coverage gaps, or before measuring performance."
 ---
 
 # Prune
