@@ -119,7 +119,7 @@ The smallest fix grows the hit area without changing how the target looks, so a 
 ## 8. Reflow, zoom and text size
 
 - **320px wide** (WCAG reflow): nothing scrolls sideways, nothing is cut off.
-- **Text size:** run `scripts/text-size.js`. It simulates a visitor whose browser default text size is 24px instead of 16px, and reports which text scales and which is stuck. Text set in `px` ignores this setting. Page zoom still works, so this isn't a WCAG failure, but it's a real cost for people who set a larger default. Report it, and if the px sizes are deliberate (to match a design), say so and leave the call to the author.
+- **Text size:** every font size is in `rem`; the rule and its reasoning are in `../audit/references/principles.md` under "Text follows the reader's text size". Run `scripts/text-size.js`: it simulates a browser default of 24px instead of 16px and lists the text that stays **stuck**. Then read the CSS for the causes the page might hide: `font-size` in `px`, `clamp()` bounds in `px`, and a `px` font size on `html`. Report all stuck text as one **moderate** finding (WCAG 1.4.4 Resize Text): the count of stuck elements, the sizes, and the files and lines that set them. Page zoom still works, which is why it's moderate rather than serious. It's never a "your call" finding, even when the sizes match a design (the principle says why). The fix converts font sizes and `clamp()` bounds to `rem` and line heights to unitless numbers; after fixing, run the script again and report the stuck count, which should be 0.
 
 ## 9. Reduced motion
 

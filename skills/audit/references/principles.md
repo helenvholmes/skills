@@ -12,7 +12,7 @@ Examples of what this rules out:
 - Adding a crossfade or blur to smooth a hard cut between two images. A hard cut can be the intended effect.
 - Swapping an easing curve for a "better" one when the current one was chosen.
 
-What you *should* still report about a deliberate choice: anything that makes it fail for someone. A deliberate colour that fails contrast, a deliberate animation that flickers, a deliberate px size that ignores the user's text-size setting. Report the failure and its cost, and offer the smallest change that fixes it while keeping the intent (the closest passing colour, not a new palette). Say plainly that it's a deliberate choice and the call is theirs.
+What you *should* still report about a deliberate choice: anything that makes it fail for someone. A deliberate colour that fails contrast, a deliberate animation that flickers, a deliberate target too small to hit. Report the failure and its cost, and offer the smallest change that fixes it while keeping the intent (the closest passing colour, not a new palette). Say plainly that it's a deliberate choice and the call is theirs.
 
 ## A finding needs evidence and a name
 
@@ -29,6 +29,12 @@ Worst-case testing still applies where other people supply the content: forms, c
 ## Inside a row, the content stays still
 
 When the pointer moves over a list row, card or link, the row's own text and layout shouldn't move: no sliding, nudging or growing text. Colour can change, and an element can appear (a thumbnail wiping in, an arrow), but what was already there stays where it was. Moving from one row to the next shouldn't flicker either: if something disappears and reappears while the pointer crosses between rows, that's a bug.
+
+## Text follows the reader's text size
+
+Every font size is set in `rem`, so text grows when someone raises their browser's default text size. Fluid sizes keep both ends in `rem` (`clamp(2.25rem, 5vw, 4rem)`): a `px` floor or ceiling stops the text at that size. Line heights are unitless, so they grow with the text. A `font-size` on `html` in `px` stops the whole page scaling.
+
+Text in `px` is a finding even when the size matches a design file, and it isn't the author's call: converting (`px ÷ 16`) keeps every size identical at the default setting, so the design is untouched and only the reader's setting starts working. `px` stays right for borders, shadows, icons and other non-text sizes.
 
 ## Respect the person, not just the guideline
 
